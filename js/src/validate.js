@@ -39,7 +39,7 @@ function esprimaChildren(node){
 	const acc = [];
 
 	// Should I sort them so that everything is more predicatable?
-	
+
 	let sorted_keys = Object.keys(node).sort();
 
 	for (let i = 0; i < sorted_keys.length; i++ ){
@@ -233,7 +233,6 @@ function matchTree(tree, referenceTree){
 		*/
 
 		if (nodeOne.type !== nodeTwo.root){
-			console.log("fuck");
 			return false;
 		}
 

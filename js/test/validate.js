@@ -335,14 +335,14 @@ function testMatchTree(){
 
 	// Test 9
 
-	const functionWhileIfIfWhileWhileIfVarReturn = esprima.parse(`
+	const functionWhileReturn = esprima.parse(`
 		function hello()  {
 			while(true){
 			}
 			return x;
 		}`);
 
-	function functionWhileIfIfWhileWhileIfVarReturnTree() {
+	function functionWhileReturnTree() {
 
 		const a = new Tree(convertToEsprima('function'));
 
@@ -366,7 +366,7 @@ function testMatchTree(){
 		return a
 	}
 
-	assert(matchTree(functionWhileIfIfWhileWhileIfVarReturn.body, functionWhileIfIfWhileWhileIfVarReturnTree()));
+	assert(matchTree(functionWhileReturn.body, functionWhileReturnTree()));
 
 }
 
