@@ -1,27 +1,20 @@
 /*
 
-This is a implemtnation of a tree data struct,
-children is called body, simply because that is what esprima does.
-
-*/
-
-class Tree {
-
-	constructor(root){
-		this.root = root;
-		this.children = null;
-	}
-}
-
-/*
-esprimaChildren
+getChildren
 
 Node (Not Null) -> List <Node>
 
-Accesses the children of a node. 
+Accesses the children of a node.
+
+
+We are only looking at the 'rough structure' of 
+the program, so literal values are ignored. For example the program
+will not know the difference between var x = 10 and var x = 20.
+They both just look like variable declarations.
+
 */
 
-function esprimaChildren(node){
+function getChildren(node){
 
 	let exclude = new Set([
 		'expression',
@@ -38,7 +31,9 @@ function esprimaChildren(node){
 
 	const acc = [];
 
-	// Should I sort them so that everything is more predicatable?
+	// The keys are sorted before hand so that 
+	// the order in which things are returned is more 
+	// predictable
 
 	let sorted_keys = Object.keys(node).sort();
 
@@ -54,17 +49,7 @@ function esprimaChildren(node){
 
 	}
 
-	/*
-	for (let val in node){
-		if (!exclude.has(val)){
-			if (node[val] != null){
-				acc.push(node[val])
-			}
-		}
-	}
-	*/
-
-	// This flattens the list 
+	// Acc is an array of arrays htis 
 	return [].concat.apply([], acc);
 };
 
@@ -86,15 +71,15 @@ function enqueueChildren(queue, children){
 };
 /*
 
-convertToEsprima
+commonNameToFormalName
 
 String -> String
 
-Convert common words like var, block, expression to words Esprima is expecting
+Convert common words like var, block, expression to words the parser is expecting
 
 */ 
 
-function convertToEsprima(x){
+function commonNameToFormalName(x){
 
 	const d = {
 		'function': 'FunctionDeclaration',
@@ -126,7 +111,7 @@ function convertToEsprima(x){
 
 /*
 
-listToEsprima
+listCommonNameToFormalName
 
 List <String> -> List <String>
 
@@ -134,19 +119,20 @@ Executes convert to Esprima on every element in list.
 
 */
 
-function listToEsprima(x){
-	return x.map(convertToEsprima)
+function listCommonNameToFormalName(x){
+	return x.map(commonNameToFormalName)
 }
 
 /*
 
 blackList
 
+Parsed Tree -> List <String> -> Boolean
+
 This takes a tree and list of node types, it returns false if any of
 those node types appear in the tree.
 
-Parsed Tree -> List <String> -> Boolean
-
+This is bfs that terminates when a prohibited value has been encountered.
 
 */
 
@@ -163,7 +149,7 @@ function blackList(tree, blackList){
 			return false;
 		}
 
-		let children = esprimaChildren(node)
+		let children = getChildren(node)
 
 		if (children){
 			enqueueChildren(q, children);
@@ -182,6 +168,8 @@ those node types appear in the tree, otherwise it returns false.
 
 Parsed Tree -> List <String> -> Boolean
 
+This is bfs that terminates when all desired values have been encountered,
+
 */
 
 function whiteList(tree, whiteList){
@@ -195,7 +183,7 @@ function whiteList(tree, whiteList){
 
 		whiteListSet.delete(node.type);
 
-		let children = esprimaChildren(node)
+		let children = getChildren(node)
 
 		if (children){
 			enqueueChildren(q, children);
@@ -209,35 +197,29 @@ function whiteList(tree, whiteList){
 
 matchTree
 
-Parsed Tree -> Manually Constrcuted Tree -> Boolean
+Parsed Tree -> Parsed Tree -> Boolean
 
 This walks through two trees at the same time. If at any point these two trees
 differ it returns false, if have exactly the same structure it returns true.
 
 */
 
-function matchTree(tree, referenceTree){
+function matchTree(treeOne, treeTwo){
 
-	const queueOne = tree.slice();
-	const queueTwo = [referenceTree]
+	const queueOne = treeOne.slice();
+	const queueTwo = treeTwo.slice();
 
 	while (queueOne.length && queueTwo.length){
 
 		let nodeOne = queueOne.shift()
 		let nodeTwo = queueTwo.shift()
 
-		/*
-			console.log(nodeOne);
-			console.log(nodeTwo);
-			console.log('-----')
-		*/
-
-		if (nodeOne.type !== nodeTwo.root){
+		if (nodeOne.type !== nodeTwo.type){
 			return false;
 		}
 
-		let childrenOne = esprimaChildren(nodeOne);
-		let childrenTwo = nodeTwo.children;
+		let childrenOne = getChildren(nodeOne);
+		let childrenTwo = getChildren(nodeTwo);
 
 		if (childrenOne){
 			enqueueChildren(queueOne, childrenOne);
@@ -248,10 +230,96 @@ function matchTree(tree, referenceTree){
 		}
 	}
 
-	/*
-	console.log(queueOne);
-	console.log(queueTwo);
-	*/
-
 	return queueOne.length === 0 && queueTwo.length === 0;
 };
+
+
+/*
+
+removeInOrder
+
+List <Any> -> Any -> Void
+
+
+Takes a list A and value B, if the head of list A is equal to B.
+It mutates A by removing the head.
+
+*/
+
+function removeInOrder(l, value){
+
+	if (!l) return
+
+	const first = l[0];
+	if (value === first){
+		l.shift()
+	}
+}
+
+/*
+
+generalStructure
+
+Parsed Tree -> List String -> Boolean
+
+Traverses entire tree looking for values in 'structures' parameters
+each time a value is found it is shifted off the list. If the list is 
+ever empty this means that all values have been seen and you can return.
+
+*/
+
+function matchTreePrime(treeOne, structures){
+
+	function f(root, remaining){
+
+		if (!remaining.length){
+			return true;
+		}
+
+		if (!root){
+			return false;
+		}
+
+		const remainingPrime = remaining.slice()
+
+		if (root.type){
+			removeInOrder(remainingPrime, root.type)
+		}
+
+		const children = getChildren(root);
+
+		if (!children){
+			return false;
+		}
+
+		for (let i = 0; i < children.length; i ++){
+			if(f(children[i], remainingPrime)){
+				return true;
+			}
+		}
+		return false;
+	};
+
+	return f(treeOne, structures);
+};
+
+const t = esprima.parse(
+	`if(true)
+		while(true){
+			var x;
+			for(let x = 0; x < 10; x++){
+				console.log("fuck");
+			}
+
+		}`
+	);
+
+res = matchTreePrime(t.body, [
+
+	commonNameToFormalName('if'),
+	commonNameToFormalName('while'),
+	commonNameToFormalName('for')
+
+]);
+
+console.log(res)
