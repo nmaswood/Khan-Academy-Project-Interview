@@ -6,7 +6,6 @@ Node (Not Null) -> List <Node>
 
 Accesses the children of a node.
 
-
 We are only looking at the 'rough structure' of 
 the program, so literal values are ignored. For example the program
 will not know the difference between var x = 10 and var x = 20.
@@ -59,59 +58,6 @@ function enqueueChildren(queue, children){
 		queue.push(children[i])
 	}
 };
-/*
-
-commonNameToFormalName
-
-String -> String
-
-Convert common words like var, block, expression to words the parser is expecting
-
-*/ 
-
-function commonNameToFormalName(x){
-
-	const d = {
-		'function': 'FunctionDeclaration',
-		'block': 'BlockStatement',
-		'var': 'VariableDeclaration',
-		'while':'WhileStatement',
-		'return':'ReturnStatement',
-		'if': 'IfStatement',
-		'for':'ForStatement',
-		'continue': 'ContinueStatement',
-		'expression': 'ExpressionStatement',
-		'expressive': 'FunctionExpression',
-		'break': 'BreakStatement',
-		'cond': 'ConditionalExpression',
-		'dict': 'ObjectExpression',
-		'literal': 'Literal',
-		'VariableDeclarator': 'VariableDeclarator',
-		'call': 'CallExpression',
-		'VariableDeclarator': 'VariableDeclarator',
-		'Identifier': 'Identifier'
-	}
-
-	if (x in d){
-		return d[x]
-	}
-
-	throw `Key: ${x} not present`;
-}
-
-/*
-
-listCommonNameToFormalName
-
-List <String> -> List <String>
-
-Executes convert to Esprima on every element in list.
-
-*/
-
-function listCommonNameToFormalName(x){
-	return x.map(commonNameToFormalName)
-}
 
 /*
 
@@ -183,9 +129,6 @@ function whiteList(tree, whiteList){
 	return whiteListSet.size === 0;
 };
 
-
-
-
 /*
 
 removeInOrder
@@ -241,7 +184,7 @@ function generalStructure(treeOne, structures){
 		const children = getChildren(root);
 
 		if (!children){
-			return false;
+			return remaining.length === 0;
 		}
 
 		for (let i = 0; i < children.length; i ++){
@@ -253,44 +196,4 @@ function generalStructure(treeOne, structures){
 	};
 
 	return f(treeOne, structures);
-};
-
-/*
-
-matchTree
-
-Parsed Tree -> Parsed Tree -> Boolean
-
-This walks through two trees at the same time. If at any point these two trees
-differ it returns false, if have exactly the same structure it returns true.
-
-*/
-
-function matchTree(treeOne, treeTwo){
-
-	const queueOne = treeOne.slice();
-	const queueTwo = treeTwo.slice();
-
-	while (queueOne.length && queueTwo.length){
-
-		let nodeOne = queueOne.shift()
-		let nodeTwo = queueTwo.shift()
-
-		if (nodeOne.type !== nodeTwo.type){
-			return false;
-		}
-
-		let childrenOne = getChildren(nodeOne);
-		let childrenTwo = getChildren(nodeTwo);
-
-		if (childrenOne){
-			enqueueChildren(queueOne, childrenOne);
-		}
-
-		if (childrenTwo){
-			enqueueChildren(queueTwo, childrenTwo);
-		}
-	}
-
-	return queueOne.length === 0 && queueTwo.length === 0;
 };

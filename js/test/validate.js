@@ -6,7 +6,6 @@ function assert(condition, message) {
     }
 }
 
-
 /*
 
 commonNameToFormalName
@@ -45,6 +44,20 @@ function commonNameToFormalName(x){
 	}
 
 	throw `Key: ${x} not present`;
+}
+
+/*
+
+listCommonNameToFormalName
+
+List <String> -> List <String>
+
+Executes convert to Esprima on every element in list.
+
+*/
+
+function listCommonNameToFormalName(x){
+	return x.map(commonNameToFormalName)
 }
 
 // Testing Constants
@@ -212,7 +225,7 @@ function testGeneralStructure(){
 		while(true){
 			var x;
 			for(let x = 0; x < 10; x++){
-				console.log("fuck");
+				console.log("foooooooo");
 			}
 		}`
 	);
@@ -226,7 +239,7 @@ function testGeneralStructure(){
 		while(true){
 			var x;
 			for(let x = 0; x < 10; x++){
-				console.log("fuck");
+				console.log("foooooooo");
 			}
 		}`
 	);
@@ -256,7 +269,7 @@ function testGeneralStructure(){
 	`while(true){
 		var x;
 		for(let x = 0; x < 10; x++){
-			console.log("fuck");
+			console.log("foooooooo");
 			}
 	}`);
 
@@ -268,7 +281,7 @@ function testGeneralStructure(){
 	`if(true)
 		while(true){
 			for(x in y){
-				console.log("fuck");
+				console.log("foooooooo");
 			}
 		}`
 	);
@@ -296,7 +309,7 @@ function testGeneralStructure(){
 		while(true){
 			var x;
 			for(let x = 0; x < 10; x++){
-				console.log("fuck");
+				console.log("foooooooo");
 			}
 		}`
 	);
@@ -313,157 +326,11 @@ function testGeneralStructure(){
 
 }
 
-function testMatchTree(){
-
-	// Test 1
-
-	const simpleFunctionA = lib.parse(`
-		function testNameOne (arg1, arg2){
-		return 10; 
-	}`)
-	const simpleFunctionB = lib.parse(`
-		function testNameTwo (alpha, beta){
-			return 20;
-		}
-	`)
-
-	assert(matchTree(simpleFunctionA.body, simpleFunctionB.body));
-
-	// Test 2
-
-	const simpleVarA = lib.parse(`var x = 10;`);
-	const simpleVarB = lib.parse(`let x = 35;`);
-
-	assert(matchTree(simpleVarA.body, simpleVarB.body));
-
-	// Test 3
-
-	const functionWhileA = lib.parse(`
-			function goodbye (){
-			while (false){
-				console.log ("goodbye");
-			}
-		}`);
-
-	const functionWhileB = lib.parse(`
-			function hello (){
-				while (true){
-					console.log("hello");
-			}
-		}`);
-
-	assert(matchTree(functionWhileA.body, functionWhileB.body));
-
-	// Test 4
-
-	const functionIfA = lib.parse(`
-			function hello (){
-			var cond = 20;
-			if (x == 2){
-				const x = 5;
-			}
-			return x;
-	}`);
-
-	const functionIfB = lib.parse(`
-			function goodbye (){
-				let cond = 10;
-				if (cond == 21341234){
-					const y = 10;
-				}
-				return y;}`
-	);
-
-	assert(matchTree(functionIfA.body, functionIfB.body));
-
-	// Test 5
-
-	const functionWhileIfA = lib.parse(`
-			function hello (){
-				while(x  > 10){
-					if (false != []){
-						console.log('fooooo');
-					}
-				}
-			}`);
-
-	const functionWhileIfB = lib.parse(`
-			function goodbye (){
-				while(x < 10){
-					if (true == true){
-						alert("barrrr");
-					}
-				}
-			}`);
-
-	assert(matchTree(functionWhileIfA.body, functionWhileIfB.body));
-
-	// Test 6
-
-	const functionWhileBreakVarIfA = lib.parse(`
-			function hello (){
-				while(true){
-					break
-					if (x){
-						console.log ("hello world");
-					}
-				}
-			}`);
-
-
-	const functionWhileBreakVarIfB = lib.parse(`
-			function hello (){
-				while(true){
-					break;
-					if (x){
-						console.log ("hello world");
-					}
-				}
-			}`);
-
-	assert(matchTree(functionWhileBreakVarIfA.body, functionWhileBreakVarIfB.body));
-
-	// Test 7
-
-	const functionWhileVarExpressiveA = lib.parse(`
-		while(true){
-			alert("jklajsdklf")
-		}
-		function goodbye()  {
-			while(true){
-
-				const  x = (function(){return 1;})();
-			}
-
-			return x;
-		}`);
-
-	const functionWhileVarExpressiveB = lib.parse(`
-		while (false){console.log("alert");}
-
-		function hola()  {
-			while(false){
-
-				const  x = (function(){return 1;})();
-			}
-			
-			return x;
-		}`);
-
-	assert(matchTree(functionWhileVarExpressiveA.body, functionWhileVarExpressiveA.body));
-
-	if (TEST_LONG_STR){
-		assert(matchTree(lib.parse(LONG_STR).body,lib.parse(LONG_STR).body ));
-		console.log("done")
-	}
-}
-
 function oneTrial(){
 	const start = performance.now();
 	testwhiteList();
 	testBlackList();
 	testGeneralStructure();
-	//testMatchTree();
 	const end = performance.now();
 	return end - start;
 }
@@ -480,7 +347,6 @@ function timeIt(){
 	}
 
 	const res = acc / x;
-
 	console.log(res)
 }
 
