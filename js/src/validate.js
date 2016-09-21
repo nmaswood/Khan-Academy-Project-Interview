@@ -31,22 +31,12 @@ function getChildren(node){
 
 	const acc = [];
 
-	// The keys are sorted before hand so that 
-	// the order in which things are returned is more 
-	// predictable
-
-	let sorted_keys = Object.keys(node).sort();
-
-	for (let i = 0; i < sorted_keys.length; i++ ){
-
-		let key = sorted_keys[i];
-
+	for (let key in node){
 		if (!exclude.has(key)){
 			if(node[key] != null){
 				acc.push(node[key])
 			}
 		}
-
 	}
 
 	// Acc is an array of arrays htis 
@@ -193,6 +183,78 @@ function whiteList(tree, whiteList){
 	return whiteListSet.size === 0;
 };
 
+
+
+
+/*
+
+removeInOrder
+
+List <Any> -> Any -> Void
+
+
+Takes a list A and value B, if the head of list A is equal to B.
+It mutates A by removing the head.
+
+*/
+
+function removeInOrder(l, value){
+
+	if (!l) return
+
+	const first = l[0];
+	if (value === first){
+		l.shift()
+	}
+}
+
+/*
+
+generalStructure
+
+Parsed Tree -> List String -> Boolean
+
+Traverses entire tree looking for values in 'structures' parameters
+each time a value is found it is shifted off the list. If the list is 
+ever empty this means that all values have been seen and you can return.
+
+*/
+
+function generalStructure(treeOne, structures){
+
+	function f(root, remaining){
+
+		if (!remaining.length){
+			return true;
+		}
+
+		if (!root){
+			return false;
+		}
+
+		const remainingPrime = remaining.slice()
+
+		if (root.type){
+			removeInOrder(remainingPrime, root.type)
+		}
+
+		const children = getChildren(root);
+
+		if (!children){
+			return false;
+		}
+
+		for (let i = 0; i < children.length; i ++){
+			if(f(children[i], remainingPrime)){
+				return true;
+			}
+		}
+		return false;
+	};
+
+	return f(treeOne, structures);
+};
+
 /*
 
 matchTree
@@ -232,94 +294,3 @@ function matchTree(treeOne, treeTwo){
 
 	return queueOne.length === 0 && queueTwo.length === 0;
 };
-
-
-/*
-
-removeInOrder
-
-List <Any> -> Any -> Void
-
-
-Takes a list A and value B, if the head of list A is equal to B.
-It mutates A by removing the head.
-
-*/
-
-function removeInOrder(l, value){
-
-	if (!l) return
-
-	const first = l[0];
-	if (value === first){
-		l.shift()
-	}
-}
-
-/*
-
-generalStructure
-
-Parsed Tree -> List String -> Boolean
-
-Traverses entire tree looking for values in 'structures' parameters
-each time a value is found it is shifted off the list. If the list is 
-ever empty this means that all values have been seen and you can return.
-
-*/
-
-function matchTreePrime(treeOne, structures){
-
-	function f(root, remaining){
-
-		if (!remaining.length){
-			return true;
-		}
-
-		if (!root){
-			return false;
-		}
-
-		const remainingPrime = remaining.slice()
-
-		if (root.type){
-			removeInOrder(remainingPrime, root.type)
-		}
-
-		const children = getChildren(root);
-
-		if (!children){
-			return false;
-		}
-
-		for (let i = 0; i < children.length; i ++){
-			if(f(children[i], remainingPrime)){
-				return true;
-			}
-		}
-		return false;
-	};
-
-	return f(treeOne, structures);
-};
-
-const t = esprima.parse(
-	`if(true)
-		while(true){
-			var x;
-			for(let x = 0; x < 10; x++){
-				console.log("fuck");
-			}
-
-		}`
-	);
-
-res = matchTreePrime(t.body, [
-
-	commonNameToFormalName('if'),
-	commonNameToFormalName('while'),
-	commonNameToFormalName('for')
-
-]);
-
-console.log(res)
