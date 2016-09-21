@@ -4,42 +4,6 @@ function assert(condition, message) {
     }
 }
 
-// Test Utility Functions
-
-function testIsArray(){
-
-	let a = [1,2,3];
-	let b = [];
-	let c = 'c';
-	let d = {};
-	let e = 1234123;
-
-	// True
-	assert(isArray(a));
-	assert(isArray(b));
-
-	// False
-	assert(!isArray(c));
-	assert(!isArray(d));
-	assert(!isArray(e));
-};
-
-
-function testXor(){
-
-	// True
-	assert(xor(false,true));
-	assert(xor(true,false));
-
-	// False
-	assert(!xor(true,true));
-	assert(!xor(false,false));
-};
-
-
-testIsArray();
-testXor();
-
 // Test Core API
 
 const strings = {
@@ -107,7 +71,6 @@ function testBlackList(){
 	assert(blackList(vals.null,listToEsprima(['while','for'])));
 	assert(blackList(vals.literal, listToEsprima(['var','while'])));
 
-
 	assert(blackList(vals.dict, listToEsprima(['for','while'])));
 	assert(blackList(vals.if, listToEsprima(['return','while'])));
 	assert(blackList(vals.expressive, listToEsprima(['for','while'])));
@@ -139,7 +102,7 @@ function testBlackList(){
 	
 };
 
-//testBlackList();
+testBlackList();
 
 function testwhiteList(){
 
@@ -173,22 +136,238 @@ function testwhiteList(){
 	assert(!whiteList(vals.sum, listToEsprima(['var','expression', 'continue'])));
 };
 
-//testwhiteList();
+testwhiteList();
 
-const a = new Tree(convertToEsprima('function'));
-const b = new Tree(convertToEsprima('block'));
-const c = new Tree(convertToEsprima('while'));
-const d = new Tree(convertToEsprima('block'));
+function testMatchTree(){
 
-c.body = d
-b.body = [c]
-a.body = b
+	// Test 1
 
-const simple = esprima.parse(`
-	function hello (){
-		while (true){
-		}
-	}`);
+	const simpleFunction = esprima.parse(`function hello (){}`);
 
-res = matchTree(simple.body, [a])
-console.log (res)
+	function simpleFunctionTree(){
+
+		return new Tree(convertToEsprima('function'));
+	}
+
+	//assert(matchTree(simpleFunction.body, simpleFunctionTree()));
+
+	// Test 2
+
+	const simpleVar = esprima.parse(`var x = 10;`);
+
+	function simpleVarTree(){
+
+		return new Tree(convertToEsprima('var'));
+	}
+
+	//assert(matchTree(simpleVar.body, simpleVarTree()));
+
+	const functionWhile = esprima.parse(`
+			function hello (){
+			while (true){
+			}
+		}`);
+
+
+	function functionWhileTree() {
+
+		const a = new Tree(convertToEsprima('function'));
+		const b = new Tree(convertToEsprima('block'));
+		const c = new Tree(convertToEsprima('while'));
+		const d = new Tree(convertToEsprima('block'));
+
+		c.children = [d]
+		b.children = [c]
+		a.children = [b]
+
+		return a
+	}
+
+	//assert(matchTree(functionWhile.body, functionWhileTree()));
+
+	// Test 4
+
+	const functionIf = esprima.parse(`
+			function hello (){
+			if (true){
+			}
+		}`);
+
+	function functionIfTree() {
+
+		const a = new Tree(convertToEsprima('function'));
+		const b = new Tree(convertToEsprima('block'));
+		const c = new Tree(convertToEsprima('if'));
+		const d = new Tree(convertToEsprima('block'));
+
+		c.children = [d]
+		b.children = [c]
+		a.children = [b]
+
+		return a
+	}
+
+	//assert(matchTree(functionIf.body, functionIfTree()));
+
+	// Test 5
+
+	const functionWhileIf = esprima.parse(`
+			function hello (){
+				while(true){
+					if (true){
+					}
+				}
+			}`);
+
+	function functionWhileIfTree() {
+
+		const a = new Tree(convertToEsprima('function'));
+		const b = new Tree(convertToEsprima('block'));
+		const c = new Tree(convertToEsprima('while'));
+		const d = new Tree(convertToEsprima('block'));
+		const e = new Tree(convertToEsprima('if'));
+		const f = new Tree(convertToEsprima('block'));
+
+		e.children = [f];
+		d.children = [e];
+		c.children = [d]
+		b.children = [c]
+		a.children = [b]
+
+		return a
+	}
+
+	//assert(matchTree(functionWhileIf.body, functionWhileIfTree()));
+
+	// Test 6
+
+	const functionWhileVarIf = esprima.parse(`
+			function hello (){
+				while(true){
+					const x = true;
+					if (x){
+						console.log ("hello world");
+					}
+				}
+			}`);
+
+	function functionWhileVarIfTree() {
+
+		const a = new Tree(convertToEsprima('function'));
+		const b = new Tree(convertToEsprima('block'));
+		const c = new Tree(convertToEsprima('while'));
+		const d = new Tree(convertToEsprima('block'));
+		const e = new Tree(convertToEsprima('if'));
+		const f = new Tree(convertToEsprima('block'));
+
+		const g = new Tree(convertToEsprima('var'));
+
+		e.children = [f];
+		d.children = [e];
+		c.children = [d, g]
+		b.children = [c]
+		a.children = [b]
+
+		return a
+	}
+
+	//assert(matchTree(functionWhileVarIf.body, functionWhileVarIfTree()));
+	
+	// Test 7
+
+	const whileIfBreakContinue = esprima.parse(`
+			function hello (){
+				while(true){
+					if (true){
+						break;
+					} 
+					continue;
+				}
+		}`);
+
+	function whileIfBreakContinueTree() {
+
+		const a = new Tree(convertToEsprima('function'));
+		const b = new Tree(convertToEsprima('block'));
+		const c = new Tree(convertToEsprima('while'));
+		const d = new Tree(convertToEsprima('block'));
+		const e = new Tree(convertToEsprima('if'));
+
+		const f = new Tree(convertToEsprima('block'));
+		const g = new Tree(convertToEsprima('continue'));
+
+
+		e.children = [g,f];
+		d.children = [e];
+		c.children = [d]
+		b.children = [c]
+		a.children = [b]
+
+		return a
+	}
+
+	//assert(matchTree(whileIfBreakContinue.body, whileIfBreakContinueTree()));
+
+	// Test 8
+
+	const varExpressive = esprima.parse(`var x = (function(){return 1;})();`);
+
+	function varExpressiveTree() {
+
+		const a = new Tree(convertToEsprima('var'));
+		const b = new Tree(convertToEsprima('VariableDeclarator'));
+		const c = new Tree(convertToEsprima('call'));
+		const d = new Tree(convertToEsprima('expressive'));
+		const e = new Tree(convertToEsprima('block'));
+		const f = new Tree(convertToEsprima('return'));
+		const g = new Tree(convertToEsprima('literal'));
+
+		e.children = [f,g];
+		d.children = [e];
+		c.children = [d]
+		b.children = [c]
+		a.children = [b]
+
+		return a
+	}
+
+	assert(matchTree(varExpressive.body, varExpressiveTree()));
+
+	// Test 9
+
+	const functionWhileIfIfWhileWhileIfVarReturn = esprima.parse(`
+		function hello()  {
+			while(true){
+			}
+			return x;
+		}`);
+
+	function functionWhileIfIfWhileWhileIfVarReturnTree() {
+
+		const a = new Tree(convertToEsprima('function'));
+
+		const b = new Tree(convertToEsprima('block'));
+
+		const c = new Tree(convertToEsprima('while'));
+
+		const d = new Tree(convertToEsprima('return'));
+
+		const e = new Tree(convertToEsprima('block'));
+
+		const f = new Tree(convertToEsprima('Identifier'));
+
+		d.children = [e,f]
+		b.children = [c,d]
+		a.children = [b]
+
+
+
+
+		return a
+	}
+
+	assert(matchTree(functionWhileIfIfWhileWhileIfVarReturn.body, functionWhileIfIfWhileWhileIfVarReturnTree()));
+
+}
+
+testMatchTree();

@@ -7,45 +7,11 @@ children is called body, simply because that is what esprima does.
 
 class Tree {
 
-	constructor(type){
-		this.type = type;
-		this.body = [];
+	constructor(root){
+		this.root = root;
+		this.children = null;
 	}
-
 }
-
-/*
-
-isArray
-
-Any -> Boolean
-
-Takes an object and returns true if it is an instance of an array.
-
-*/ 
-
-function isArray(x){
-	return x.constructor === Array;
-};
-
-/*
-xor 
-
-Boolean -> Boolean -> Boolean
-
-Does the following:
-
-true -> true -> false
-false -> true -> true
-true -> false -> true
-true -> true -> false
-*/
-
-
-function xor(x,y){
-
-	return !x !== !y;
-};
 
 /*
 esprimaChildren
@@ -67,10 +33,28 @@ function esprimaChildren(node){
 		'id',
 		'raw',
 		'label',
-		'operator'])
+		'operator',
+		'test'])
 
 	const acc = [];
 
+	// Should I sort them so that everything is more predicatable?
+	
+	let sorted_keys = Object.keys(node).sort();
+
+	for (let i = 0; i < sorted_keys.length; i++ ){
+
+		let key = sorted_keys[i];
+
+		if (!exclude.has(key)){
+			if(node[key] != null){
+				acc.push(node[key])
+			}
+		}
+
+	}
+
+	/*
 	for (let val in node){
 		if (!exclude.has(val)){
 			if (node[val] != null){
@@ -78,6 +62,7 @@ function esprimaChildren(node){
 			}
 		}
 	}
+	*/
 
 	// This flattens the list 
 	return [].concat.apply([], acc);
@@ -124,14 +109,19 @@ function convertToEsprima(x){
 		'expressive': 'FunctionExpression',
 		'break': 'BreakStatement',
 		'cond': 'ConditionalExpression',
-		'dict': 'ObjectExpression'
+		'dict': 'ObjectExpression',
+		'literal': 'Literal',
+		'VariableDeclarator': 'VariableDeclarator',
+		'call': 'CallExpression',
+		'VariableDeclarator': 'VariableDeclarator',
+		'Identifier': 'Identifier'
 	}
 
 	if (x in d){
 		return d[x]
 	}
 
-	throw `Key: ${x}not present`;
+	throw `Key: ${x} not present`;
 }
 
 /*
@@ -175,9 +165,9 @@ function blackList(tree, blackList){
 
 		let children = esprimaChildren(node)
 
-		if (!children) continue;
-
-		enqueueChildren(q, children);
+		if (children){
+			enqueueChildren(q, children);
+		}
 	}
 
 	return true;
@@ -196,7 +186,6 @@ Parsed Tree -> List <String> -> Boolean
 
 function whiteList(tree, whiteList){
 
-	console.log(tree);
 	const whiteListSet = new Set(whiteList);
 	const q = tree.slice();
 
@@ -208,9 +197,9 @@ function whiteList(tree, whiteList){
 
 		let children = esprimaChildren(node)
 
-		if (!children) continue;
-
-		enqueueChildren(q, children);
+		if (children){
+			enqueueChildren(q, children);
+		}
 	}
 
 	return whiteListSet.size === 0;
@@ -230,24 +219,40 @@ differ it returns false, if have exactly the same structure it returns true.
 function matchTree(tree, referenceTree){
 
 	const queueOne = tree.slice();
-	const queueTwo = referenceTree;
+	const queueTwo = [referenceTree]
 
 	while (queueOne.length && queueTwo.length){
 
-		let [nodeOne,nodeTwo]  = [queueOne.shift(), queueTwo.shift()];
+		let nodeOne = queueOne.shift()
+		let nodeTwo = queueTwo.shift()
 
-		if (nodeOne.type !== nodeTwo.type){
+		/*
+			console.log(nodeOne);
+			console.log(nodeTwo);
+			console.log('-----')
+		*/
+
+		if (nodeOne.type !== nodeTwo.root){
+			console.log("fuck");
 			return false;
 		}
 
-		let [childrenOne, childrenTwo] = [esprimaChildren(nodeOne), nodeTwo.body]
+		let childrenOne = esprimaChildren(nodeOne);
+		let childrenTwo = nodeTwo.children;
 
-		if (!childrenOne && !childrenTwo){
-			continue;
+		if (childrenOne){
+			enqueueChildren(queueOne, childrenOne);
 		}
 
-		enqueueChildren(queueOne, childrenOne);
-		enqueueChildren(queueTwo, childrenTwo);
+		if (childrenTwo){
+			enqueueChildren(queueTwo, childrenTwo);
+		}
 	}
+
+	/*
+	console.log(queueOne);
+	console.log(queueTwo);
+	*/
+
 	return queueOne.length === 0 && queueTwo.length === 0;
 };
