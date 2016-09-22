@@ -15,31 +15,31 @@ They both just look like variable declarations.
 
 function getChildren(node){
 
-	let exclude = new Set([
-		'expression',
-		'generator',
-		'type',
-		'kind',
-		'value',
-		'name',
-		'id',
-		'raw',
-		'label',
-		'operator',
-		'test'])
+    let exclude = new Set([
+        'expression',
+        'generator',
+        'type',
+        'kind',
+        'value',
+        'name',
+        'id',
+        'raw',
+        'label',
+        'operator',
+        'test'])
 
-	const acc = [];
+    const acc = [];
 
-	for (let key in node){
-		if (!exclude.has(key)){
-			if(node[key] != null){
-				acc.push(node[key])
-			}
-		}
-	}
+    for (let key in node){
+        if (!exclude.has(key)){
+            if(node[key] != null){
+                acc.push(node[key])
+            }
+        }
+    }
 
-	// Acc is an array of arrays htis 
-	return [].concat.apply([], acc);
+    // Acc is an array of arrays htis 
+    return [].concat.apply([], acc);
 };
 
 /*
@@ -53,10 +53,10 @@ This takes a Queue<Node> and <List> Node and enqueues all children onto the queu
 */
 
 function enqueueChildren(queue, children){
-	var len = children.length;
-	for (let i = 0; i < len;i++){
-		queue.push(children[i])
-	}
+    var len = children.length;
+    for (let i = 0; i < len;i++){
+        queue.push(children[i])
+    }
 };
 
 /*
@@ -74,25 +74,25 @@ This is bfs that terminates when a prohibited value has been encountered.
 
 function blackList(tree, blackList){
 
-	const blackListSet = new Set(blackList);
-	const q = tree.slice();
+    const blackListSet = new Set(blackList);
+    const q = tree.slice();
 
-	while (q.length){
+    while (q.length){
 
-		let node = q.shift();
+        let node = q.shift();
 
-		if (blackListSet.has(node.type)){
-			return [false, node.type];
-		}
+        if (blackListSet.has(node.type)){
+            return [false, node.type];
+        }
 
-		let children = getChildren(node)
+        let children = getChildren(node)
 
-		if (children){
-			enqueueChildren(q, children);
-		}
-	}
+        if (children){
+            enqueueChildren(q, children);
+        }
+    }
 
-	return [true, null];
+    return [true, null];
 };
 
 /*
@@ -110,23 +110,23 @@ This is bfs that terminates when all desired values have been encountered,
 
 function whiteList(tree, whiteList){
 
-	const whiteListSet = new Set(whiteList);
-	const q = tree.slice();
+    const whiteListSet = new Set(whiteList);
+    const q = tree.slice();
 
-	while (q.length && whiteListSet.size){
+    while (q.length && whiteListSet.size){
 
-		let node = q.shift();
+        let node = q.shift();
 
-		whiteListSet.delete(node.type);
+        whiteListSet.delete(node.type);
 
-		let children = getChildren(node)
+        let children = getChildren(node)
 
-		if (children){
-			enqueueChildren(q, children);
-		}
-	}
+        if (children){
+            enqueueChildren(q, children);
+        }
+    }
 
-	return [whiteListSet.size === 0, whiteListSet];
+    return [whiteListSet.size === 0, whiteListSet];
 };
 
 /*
@@ -143,12 +143,12 @@ It mutates A by removing the head.
 
 function removeInOrder(l, value){
 
-	if (!l) return;
+    if (!l) return;
 
-	const first = l[0];
-	if (value === first){
-		l.shift();
-	}
+    const first = l[0];
+    if (value === first){
+        l.shift();
+    }
 }
 
 /*
@@ -165,35 +165,35 @@ ever empty this means that all values have been seen and you can return.
 
 function generalStructure(tree, structures){
 
-	function f(root, remaining){
+    function f(root, remaining){
 
-		if (!remaining.length){
-			return true;
-		}
+        if (!remaining.length){
+            return true;
+        }
 
-		if (!root){
-			return false;
-		}
+        if (!root){
+            return false;
+        }
 
-		const remainingPrime = remaining.slice()
+        const remainingPrime = remaining.slice()
 
-		if (root.type){
-			removeInOrder(remainingPrime, root.type)
-		}
+        if (root.type){
+            removeInOrder(remainingPrime, root.type)
+        }
 
-		const children = getChildren(root);
+        const children = getChildren(root);
 
-		if (!children){
-			return remaining.length === 0;
-		}
+        if (!children){
+            return remaining.length === 0;
+        }
 
-		for (let i = 0; i < children.length; i ++){
-			if(f(children[i], remainingPrime)){
-				return true;
-			}
-		}
-		return false;
-	};
+        for (let i = 0; i < children.length; i ++){
+            if(f(children[i], remainingPrime)){
+                return true;
+            }
+        }
+        return false;
+    };
 
-	return f(tree, structures);
+    return f(tree, structures);
 };

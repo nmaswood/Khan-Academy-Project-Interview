@@ -18,32 +18,32 @@ Convert common words like var, block, expression to words the parser is expectin
 
 function commonNameToFormalName(x){
 
-	const d = {
-		'function': 'FunctionDeclaration',
-		'block': 'BlockStatement',
-		'var': 'VariableDeclaration',
-		'while':'WhileStatement',
-		'return':'ReturnStatement',
-		'if': 'IfStatement',
-		'for':'ForStatement',
-		'continue': 'ContinueStatement',
-		'expression': 'ExpressionStatement',
-		'expressive': 'FunctionExpression',
-		'break': 'BreakStatement',
-		'cond': 'ConditionalExpression',
-		'dict': 'ObjectExpression',
-		'literal': 'Literal',
-		'VariableDeclarator': 'VariableDeclarator',
-		'call': 'CallExpression',
-		'VariableDeclarator': 'VariableDeclarator',
-		'Identifier': 'Identifier'
-	}
+    const d = {
+        'function': 'FunctionDeclaration',
+        'block': 'BlockStatement',
+        'var': 'VariableDeclaration',
+        'while':'WhileStatement',
+        'return':'ReturnStatement',
+        'if': 'IfStatement',
+        'for':'ForStatement',
+        'continue': 'ContinueStatement',
+        'expression': 'ExpressionStatement',
+        'expressive': 'FunctionExpression',
+        'break': 'BreakStatement',
+        'cond': 'ConditionalExpression',
+        'dict': 'ObjectExpression',
+        'literal': 'Literal',
+        'VariableDeclarator': 'VariableDeclarator',
+        'call': 'CallExpression',
+        'VariableDeclarator': 'VariableDeclarator',
+        'Identifier': 'Identifier'
+    }
 
-	if (x in d){
-		return d[x]
-	}
+    if (x in d){
+        return d[x]
+    }
 
-	throw `Key: ${x} not present`;
+    throw `Key: ${x} not present`;
 }
 
 /*
@@ -57,7 +57,7 @@ Executes convert to Esprima on every element in list.
 */
 
 function listCommonNameToFormalName(x){
-	return x.map(commonNameToFormalName)
+    return x.map(commonNameToFormalName)
 }
 
 // Testing Constants
@@ -69,58 +69,58 @@ const LONG_STR = 'function a(){while(true){if(true){while(true){break;continue;v
 
 const strings = {
 
-	'null': '',
-	'dict': `var x = {};x[1]=1;`,
-	'if': `if(true){console.log('true')}`,
-	'expressive': `var x = (function(){return 1;})()`,
-	'literal': '1',
-	'expression': '1 + 1',
-	'while': 'while(true){}',
+    'null': '',
+    'dict': `var x = {};x[1]=1;`,
+    'if': `if(true){console.log('true')}`,
+    'expressive': `var x = (function(){return 1;})()`,
+    'literal': '1',
+    'expression': '1 + 1',
+    'while': 'while(true){}',
 
-	'whilefor': `
-		while(true){
-			for (let i = 0; i < y; i++){}
-		}`,
+    'whilefor': `
+        while(true){
+            for (let i = 0; i < y; i++){}
+        }`,
 
-	'variable': `
-		let x = 10;
-		const y = x;
-		var z = x + y;
-		`,
+    'variable': `
+        let x = 10;
+        const y = x;
+        var z = x + y;
+        `,
 
-	'block': '{}',
-	'function': `function hello(){
-		console.log ('foo bar');
-	}`,
-	'break': 'while(true){break;}',
-	'continue': 'while(true){continue;}',
+    'block': '{}',
+    'function': `function hello(){
+        console.log ('foo bar');
+    }`,
+    'break': 'while(true){break;}',
+    'continue': 'while(true){continue;}',
 
-	'fib': `
-		function fib(x) {
-			return x == 1 || x == 0? x : f(x - 1) + f(x -2);
-		}`,
+    'fib': `
+        function fib(x) {
+            return x == 1 || x == 0? x : f(x - 1) + f(x -2);
+        }`,
 
-	'sum':`
-	  	var N = 100;
-	  	var acc = 0;
-	  	for (let i = 0; i < N; i++){
-	  		acc += i;
-	  	}
-	  	console.log(acc);`,
+    'sum':`
+        var N = 100;
+        var acc = 0;
+        for (let i = 0; i < N; i++){
+            acc += i;
+        }
+        console.log(acc);`,
 
-	'if':`
-		if(true){
-			console.log ("yea that was true");
-		}`
+    'if':`
+        if(true){
+            console.log ("yea that was true");
+        }`
 };
 
 const vals = {};
 
 function init() {
 
-	for (let key in strings){
-		vals[key] = acorn.parse(strings[key]).body;
-	}
+    for (let key in strings){
+        vals[key] = acorn.parse(strings[key]).body;
+    }
 };
 
 init();
@@ -129,224 +129,224 @@ init();
 
 function testBlackList(){
 
-	// No blacklist violations
+    // No blacklist violations
 
-	assert(blackList(vals.null,listCommonNameToFormalName(['while','for']))[0]);
-	assert(blackList(vals.literal, listCommonNameToFormalName(['var','while']))[0]);
+    assert(blackList(vals.null,listCommonNameToFormalName(['while','for']))[0]);
+    assert(blackList(vals.literal, listCommonNameToFormalName(['var','while']))[0]);
 
-	assert(blackList(vals.dict, listCommonNameToFormalName(['for','while']))[0]);
-	assert(blackList(vals.if, listCommonNameToFormalName(['return','while']))[0]);
-	assert(blackList(vals.expressive, listCommonNameToFormalName(['for','while']))[0]);
+    assert(blackList(vals.dict, listCommonNameToFormalName(['for','while']))[0]);
+    assert(blackList(vals.if, listCommonNameToFormalName(['return','while']))[0]);
+    assert(blackList(vals.expressive, listCommonNameToFormalName(['for','while']))[0]);
 
-	assert(blackList(vals.expression, listCommonNameToFormalName(['var','for','if']))[0]);
-	assert(blackList(vals.while, listCommonNameToFormalName(['return','for', 'expression']))[0]);
+    assert(blackList(vals.expression, listCommonNameToFormalName(['var','for','if']))[0]);
+    assert(blackList(vals.while, listCommonNameToFormalName(['return','for', 'expression']))[0]);
 
-	assert(blackList(vals.block, listCommonNameToFormalName(['var']))[0]);
-	assert(blackList(vals.function, listCommonNameToFormalName(['while','for']))[0]);
-	assert(blackList(vals.break, listCommonNameToFormalName(['var','for']))[0]);
+    assert(blackList(vals.block, listCommonNameToFormalName(['var']))[0]);
+    assert(blackList(vals.function, listCommonNameToFormalName(['while','for']))[0]);
+    assert(blackList(vals.break, listCommonNameToFormalName(['var','for']))[0]);
 
-	assert(blackList(vals.continue, listCommonNameToFormalName(['return','for']))[0]);
-	assert(blackList(vals.fib, listCommonNameToFormalName(['var','while']))[0]);
-	assert(blackList(vals.sum, listCommonNameToFormalName(['while','continue']))[0]);
+    assert(blackList(vals.continue, listCommonNameToFormalName(['return','for']))[0]);
+    assert(blackList(vals.fib, listCommonNameToFormalName(['var','while']))[0]);
+    assert(blackList(vals.sum, listCommonNameToFormalName(['while','continue']))[0]);
 
-	// Blacklist Violations
+    // Blacklist Violations
 
-	assert(!blackList(vals.literal, ['ExpressionStatement'])[0]);
-	assert(!blackList(vals.expression, listCommonNameToFormalName(['expression']))[0]);
-	assert(!blackList(vals.block, listCommonNameToFormalName(['block']))[0]);
-	assert(!blackList(vals.function, listCommonNameToFormalName(['function','for']))[0]);
+    assert(!blackList(vals.literal, ['ExpressionStatement'])[0]);
+    assert(!blackList(vals.expression, listCommonNameToFormalName(['expression']))[0]);
+    assert(!blackList(vals.block, listCommonNameToFormalName(['block']))[0]);
+    assert(!blackList(vals.function, listCommonNameToFormalName(['function','for']))[0]);
 
-	assert(!blackList(vals.dict, listCommonNameToFormalName(['for','dict']))[0]);
-	assert(!blackList(vals.if, listCommonNameToFormalName(['if','while']))[0]);
-	assert(!blackList(vals.expressive, listCommonNameToFormalName(['expressive','while']))[0]);
+    assert(!blackList(vals.dict, listCommonNameToFormalName(['for','dict']))[0]);
+    assert(!blackList(vals.if, listCommonNameToFormalName(['if','while']))[0]);
+    assert(!blackList(vals.expressive, listCommonNameToFormalName(['expressive','while']))[0]);
 
-	assert(!blackList(vals.break, listCommonNameToFormalName(['var','break']))[0]);
-	assert(!blackList(vals.continue, listCommonNameToFormalName(['continue','for']))[0]);
-	assert(!blackList(vals.fib, listCommonNameToFormalName(['var','return','function']))[0]);
-	assert(!blackList(vals.sum, listCommonNameToFormalName(['var','expression']))[0]);
+    assert(!blackList(vals.break, listCommonNameToFormalName(['var','break']))[0]);
+    assert(!blackList(vals.continue, listCommonNameToFormalName(['continue','for']))[0]);
+    assert(!blackList(vals.fib, listCommonNameToFormalName(['var','return','function']))[0]);
+    assert(!blackList(vals.sum, listCommonNameToFormalName(['var','expression']))[0]);
 
-	// Long Str
+    // Long Str
 
-	if (TEST_LONG_STR){
-		assert(blackList(lib.parse(LONG_STR).body, listCommonNameToFormalName(['expressive']))[0])
-		console.log("done")
+    if (TEST_LONG_STR){
+        assert(blackList(lib.parse(LONG_STR).body, listCommonNameToFormalName(['expressive']))[0])
+        console.log("done")
 
-	}
+    }
 
 };
 
 
 function testwhiteList(){
 
-	// No whitelist violations
+    // No whitelist violations
 
-	assert(whiteList(vals.null,listCommonNameToFormalName([]))[0]);
-	assert(whiteList(vals.literal, listCommonNameToFormalName(['expression']))[0]);
-	assert(whiteList(vals.while, listCommonNameToFormalName(['while']))[0]);
-	assert(whiteList(vals.whilefor, listCommonNameToFormalName(['while','for']))[0]);
+    assert(whiteList(vals.null,listCommonNameToFormalName([]))[0]);
+    assert(whiteList(vals.literal, listCommonNameToFormalName(['expression']))[0]);
+    assert(whiteList(vals.while, listCommonNameToFormalName(['while']))[0]);
+    assert(whiteList(vals.whilefor, listCommonNameToFormalName(['while','for']))[0]);
 
-	assert(whiteList(vals.block, listCommonNameToFormalName(['block']))[0]);
-	assert(whiteList(vals.function, listCommonNameToFormalName(['function']))[0]);
-	assert(whiteList(vals.break, listCommonNameToFormalName(['break']))[0]);
+    assert(whiteList(vals.block, listCommonNameToFormalName(['block']))[0]);
+    assert(whiteList(vals.function, listCommonNameToFormalName(['function']))[0]);
+    assert(whiteList(vals.break, listCommonNameToFormalName(['break']))[0]);
 
-	assert(whiteList(vals.continue, listCommonNameToFormalName(['continue']))[0]);
+    assert(whiteList(vals.continue, listCommonNameToFormalName(['continue']))[0]);
 
-	assert(whiteList(vals.fib, listCommonNameToFormalName(['return','cond']))[0]);
+    assert(whiteList(vals.fib, listCommonNameToFormalName(['return','cond']))[0]);
 
-	assert(whiteList(vals.sum, listCommonNameToFormalName(['var','for']))[0]);
+    assert(whiteList(vals.sum, listCommonNameToFormalName(['var','for']))[0]);
 
-	// whiteList Violations
+    // whiteList Violations
 
-	assert(!whiteList(vals.literal, ['expression', 'var'])[0]);
-	assert(!whiteList(vals.expression, listCommonNameToFormalName(['while']))[0]);
-	assert(!whiteList(vals.block, listCommonNameToFormalName(['break']))[0]);
-	assert(!whiteList(vals.function, listCommonNameToFormalName(['function','for', 'continue']))[0]);
+    assert(!whiteList(vals.literal, ['expression', 'var'])[0]);
+    assert(!whiteList(vals.expression, listCommonNameToFormalName(['while']))[0]);
+    assert(!whiteList(vals.block, listCommonNameToFormalName(['break']))[0]);
+    assert(!whiteList(vals.function, listCommonNameToFormalName(['function','for', 'continue']))[0]);
 
-	assert(!whiteList(vals.break, listCommonNameToFormalName(['var','while', 'break', 'for', 'if']))[0]);
-	assert(!whiteList(vals.continue, listCommonNameToFormalName(['continue','for', 'var']))[0]);
-	assert(!whiteList(vals.fib, listCommonNameToFormalName(['var','return', 'break']))[0]);
-	assert(!whiteList(vals.sum, listCommonNameToFormalName(['var','expression', 'continue']))[0]);
+    assert(!whiteList(vals.break, listCommonNameToFormalName(['var','while', 'break', 'for', 'if']))[0]);
+    assert(!whiteList(vals.continue, listCommonNameToFormalName(['continue','for', 'var']))[0]);
+    assert(!whiteList(vals.fib, listCommonNameToFormalName(['var','return', 'break']))[0]);
+    assert(!whiteList(vals.sum, listCommonNameToFormalName(['var','expression', 'continue']))[0]);
 
-	if (TEST_LONG_STR){
-		assert(!whiteList(lib.parse(LONG_STR).body, listCommonNameToFormalName(['expression']))[0]);
-		console.log("done")
-	}
+    if (TEST_LONG_STR){
+        assert(!whiteList(lib.parse(LONG_STR).body, listCommonNameToFormalName(['expression']))[0]);
+        console.log("done")
+    }
 
 };
 
 
 function testGeneralStructure(){
 
-	// Positive Tests
-	// Test 1
+    // Positive Tests
+    // Test 1
 
-	const ifWhileFor = esprima.parse(
-	`if(true)
-		while(true){
-			var x;
-			for(let x = 0; x < 10; x++){
-				console.log("foooooooo");
-			}
-		}`
-	);
+    const ifWhileFor = esprima.parse(
+    `if(true)
+        while(true){
+            var x;
+            for(let x = 0; x < 10; x++){
+                console.log("foooooooo");
+            }
+        }`
+    );
 
-	assert(generalStructure(ifWhileFor.body, listCommonNameToFormalName(['if','while','for'])))
+    assert(generalStructure(ifWhileFor.body, listCommonNameToFormalName(['if','while','for'])))
 
-	// Test 2
+    // Test 2
 
-	const ifWhileVar = esprima.parse(
-	`if(true)
-		while(true){
-			var x;
-			for(let x = 0; x < 10; x++){
-				console.log("foooooooo");
-			}
-		}`
-	);
+    const ifWhileVar = esprima.parse(
+    `if(true)
+        while(true){
+            var x;
+            for(let x = 0; x < 10; x++){
+                console.log("foooooooo");
+            }
+        }`
+    );
 
-	assert(generalStructure(ifWhileVar.body, listCommonNameToFormalName(['if','while','var'])))
-	
+    assert(generalStructure(ifWhileVar.body, listCommonNameToFormalName(['if','while','var'])))
+    
 
-	// Test 3
+    // Test 3
 
-	const ifWhileForIf = esprima.parse(
-	`if(true)
-		while(true){
-			var x;
-			for(let x = 0; x < 10; x++){
-				if(true){}
-			}
-		}`
-	);
+    const ifWhileForIf = esprima.parse(
+    `if(true)
+        while(true){
+            var x;
+            for(let x = 0; x < 10; x++){
+                if(true){}
+            }
+        }`
+    );
 
-	assert(generalStructure(ifWhileForIf.body, listCommonNameToFormalName(['if','while','for','if'])))
+    assert(generalStructure(ifWhileForIf.body, listCommonNameToFormalName(['if','while','for','if'])))
 
-	// Negative Tests
+    // Negative Tests
 
-	// Test 1
+    // Test 1
 
-	const ifWhileForNeg = esprima.parse(
-	`while(true){
-		var x;
-		for(let x = 0; x < 10; x++){
-			console.log("foooooooo");
-			}
-	}`);
+    const ifWhileForNeg = esprima.parse(
+    `while(true){
+        var x;
+        for(let x = 0; x < 10; x++){
+            console.log("foooooooo");
+            }
+    }`);
 
-	assert(!generalStructure(ifWhileForNeg.body, listCommonNameToFormalName(['if','while','for'])))
+    assert(!generalStructure(ifWhileForNeg.body, listCommonNameToFormalName(['if','while','for'])))
 
-	// Test 2
+    // Test 2
 
-	const ifWhileVarNeg = esprima.parse(
-	`if(true)
-		while(true){
-			for(x in y){
-				console.log("foooooooo");
-			}
-		}`
-	);
+    const ifWhileVarNeg = esprima.parse(
+    `if(true)
+        while(true){
+            for(x in y){
+                console.log("foooooooo");
+            }
+        }`
+    );
 
-	assert(!generalStructure(ifWhileVarNeg.body, listCommonNameToFormalName(['if','while','var'])))
-	
+    assert(!generalStructure(ifWhileVarNeg.body, listCommonNameToFormalName(['if','while','var'])))
+    
 
-	// Test 3
+    // Test 3
 
-	const ifWhileForIfNeg = esprima.parse(
-	`if(true)
-		while(true){
-			var x;
-			for(let x = 0; x < 10; x++){
-			}
-		}`
-	);
+    const ifWhileForIfNeg = esprima.parse(
+    `if(true)
+        while(true){
+            var x;
+            for(let x = 0; x < 10; x++){
+            }
+        }`
+    );
 
 
-	assert(!generalStructure(ifWhileForIfNeg.body, listCommonNameToFormalName(['if','while','for','if'])))
-	// Test 4
+    assert(!generalStructure(ifWhileForIfNeg.body, listCommonNameToFormalName(['if','while','for','if'])))
+    // Test 4
 
-	const nothing = esprima.parse(
-	`if(true)
-		while(true){
-			var x;
-			for(let x = 0; x < 10; x++){
-				console.log("foooooooo");
-			}
-		}`
-	);
+    const nothing = esprima.parse(
+    `if(true)
+        while(true){
+            var x;
+            for(let x = 0; x < 10; x++){
+                console.log("foooooooo");
+            }
+        }`
+    );
 
-	assert(generalStructure(ifWhileFor.body, listCommonNameToFormalName([])));
+    assert(generalStructure(ifWhileFor.body, listCommonNameToFormalName([])));
 
-	// Long Str
+    // Long Str
 
-	if (TEST_LONG_STR){
-		assert(!generalStructure(lib.parse(LONG_STR).body,listCommonNameToFormalName(['for'])));
-		console.log("done");
-	}
+    if (TEST_LONG_STR){
+        assert(!generalStructure(lib.parse(LONG_STR).body,listCommonNameToFormalName(['for'])));
+        console.log("done");
+    }
 
 }
 
 function oneTrial(){
-	const start = performance.now();
-	testwhiteList();
-	testBlackList();
-	testGeneralStructure();
-	const end = performance.now();
-	return end - start;
+    const start = performance.now();
+    testwhiteList();
+    testBlackList();
+    testGeneralStructure();
+    const end = performance.now();
+    return end - start;
 }
 
 function timeIt(){
 
-	const x = 10;
+    const x = 10;
 
-	let acc = 0
+    let acc = 0
 
-	for (let i = 0; i < x ;i++){
+    for (let i = 0; i < x ;i++){
 
-		acc += oneTrial()
-	}
+        acc += oneTrial()
+    }
 
-	const res = acc / x;
-	console.log(res)
+    const res = acc / x;
+    console.log(res)
 }
 
 oneTrial();
