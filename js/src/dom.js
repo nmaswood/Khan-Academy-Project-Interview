@@ -1,3 +1,24 @@
+const validNodeNames = new Set([
+	'FunctionDeclaration',
+    'BlockStatement',
+    'VariableDeclaration',
+    'WhileStatement',
+    'ReturnStatement',
+    'IfStatement',
+    'ForStatement',
+    'ContinueStatement',
+    'ExpressionStatement',
+    'FunctionExpression',
+    'BreakStatement',
+    'ConditionalExpression',
+    'ObjectExpression',
+    'Literal',
+    'VariableDeclarator',
+    'CallExpression',
+    'VariableDeclarator',
+    'Identifier'
+])
+
 /*
 
 attrDict
@@ -14,6 +35,19 @@ function attrDict(div, dict) {
 		div.setAttribute(key, dict[key]);
 	}
  }
+
+ function throttle (callback, limit) {
+    var wait = false;                  // Initially, we're not waiting
+    return function () {               // We return a throttled function
+        if (!wait) {                   // If we're not waiting
+            callback.call();           // Execute users function
+            wait = true;               // Prevent future invocations
+            setTimeout(function () {   // After a period of time
+                wait = false;          // And allow future invocations
+            }, limit);
+        }
+    }
+}
 
 /*
 
@@ -113,8 +147,34 @@ function createWordUnit(type){
 		{
 			'class': 'word-input-bar',
 			'type':'text',
-			'id': `${type}-word-input-bar`
-		})
+			'id': `${type}-word-input-bar`,
+		});
+
+	let on = true;
+	inputBar.onkeyup = function(e){
+		
+		const which = e.which || e.keyCode;
+		if (which === 13 && on){
+			if(addWordToList(type, inputBar.value)){
+				inputBar.value = '';
+			} else {
+
+				const style = inputBar.getAttribute('style');
+				const stylePrime = 'color:red';
+
+				inputBar.setAttribute('style', stylePrime);
+				on = false;
+
+				setTimeout(
+					function(){
+						on = true;
+						inputBar.setAttribute('style', style);
+					}, 2000);
+
+			}
+		}
+	}
+
 
 	// Initialize Word List Container
 
@@ -124,25 +184,6 @@ function createWordUnit(type){
 		'class':'word-list',
 		'id':`${type}-word-list`
 	});
-
-
-	// Add dummy values for word list
-
-
-	function createWord(word){
-		const span = doc.createElement('span')
-		span.innerHTML = word;
-		span.setAttribute('class', 'word');
-		return span;
-	}
-
-	const init_words = ['if', 'then' ,'else'];
-	const wordDivs = init_words.map(createWord);
-
-	for (let i  = 0; i < wordDivs.length; i++){
-		wordListContainer.appendChild(wordDivs[i]);
-	}
-
 
 	// Append divs in correct order to one another
 
@@ -160,6 +201,28 @@ function createWordUnit(type){
 	return containerDiv;
 }
 
+function createWord(word){
+	const span = document.createElement('span')
+	span.innerHTML = word;
+	span.setAttribute('class', 'word');
+	return span;
+}
+
+function addWordToList(name,word){
+
+	/*
+	if (!validNodeNames.has(name)){
+		return false;
+	}
+	*/
+
+	const list = document.getElementById(`${name}-word-list`);
+	if (list.length > 5) return;
+	const wordDiv = createWord(word);
+	list.appendChild(wordDiv);
+	console.log(list);
+}
+
 function createButtons(){
 
 	// Store reference to document
@@ -168,7 +231,7 @@ function createButtons(){
 
 	// Initialize Form that will contain buttons
 
-	const outerForm = doc.createElement('form');
+	const outerForm = doc.createElement('div');
 	outerForm.setAttribute('id', 'buttons-container');
 
 	// Initialize three buttons
@@ -199,5 +262,6 @@ function createButtons(){
 	container.appendChild(outerForm);
 }
 
+initializeEditor();
 createForm();
 createButtons();
