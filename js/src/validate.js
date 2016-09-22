@@ -15,6 +15,8 @@ They both just look like variable declarations.
 
 function getChildren(node){
 
+    // The node names in exclude correspond to literal values so we ignore them
+
     let exclude = new Set([
         'expression',
         'generator',
@@ -28,6 +30,8 @@ function getChildren(node){
         'operator',
         'test']);
 
+    // Push all the children of the node onto a list
+
     const acc = [];
 
     for (let key in node){
@@ -38,7 +42,8 @@ function getChildren(node){
         }
     }
 
-    // Acc is an array of arrays htis 
+    // Flatten all the children of the node
+
     return [].concat.apply([], acc);
 }
 
@@ -77,6 +82,10 @@ function blackList(tree, blackList){
     const blackListSet = new Set(blackList);
     const q = tree.slice();
 
+    // When the queue is empty we know that
+    // we have succesfully traversed all nodes
+    // without encountering a black listed value
+
     while (q.length){
 
         let node = q.shift();
@@ -112,6 +121,10 @@ function whiteList(tree, whiteList){
 
     const whiteListSet = new Set(whiteList);
     const q = tree.slice();
+
+    // When every element has been removed from
+    // whiteListSet we have seen every single
+    // value we have wanted to and can return true
 
     while (q.length && whiteListSet.size){
 
@@ -174,6 +187,9 @@ function generalStructure(tree, structures){
         if (!root){
             return false;
         }
+
+        // Create a copy of the list to avoid
+        // weird memory, pointer problems
 
         const remainingPrime = remaining.slice();
 

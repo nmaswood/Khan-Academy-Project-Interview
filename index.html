@@ -29,46 +29,9 @@
                 <div id = 'editor'>
             </div>
 
-            <div id = 'resp'>
-                <form id ='bars'>
+            <div id = 'words-outer-container'></div>
 
-                <div class = 'unit'>
-                    <span>Black</span><input type='text' id='black'>
-                    <div>
-                        <div>Word1</div>
-                        <div>Word2</div>
-                        <div>Word3</div>
-                    </div>
-                </div>
-
-                <div class = 'unit'>
-                    <span>White</span><input type='text' id='black'>
-                    <div>
-                        <div>Word1</div>
-                        <div>Word2</div>
-                        <div>Word3</div>
-                    </div>
-                </div>
-
-                <div class = 'unit'>
-                    <span>Structure</span><input type='text' id='black'>
-                    <div>
-                        <div>Word1</div>
-                        <div>Word2</div>
-                        <div>Word3</div>
-                    </div>
-                </div>
-            </form>
-            </div>
-
-            <div>
-
-                <form id = "bars"></div>
-                    <button id='reset' type='submit'>reset</button>
-                    <button id='manual'>manual</button>
-                    <button id='run' type='submit'>run</button>
-                </form>
-            </div>
+            <div id='buttons'></div>
 
             <div id ='feedback'>Feedback</div>
 
@@ -77,7 +40,10 @@
 
 
             <script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
             <script src="js/src/editor.js"></script>
+            <script src="js/src/dom.js"></script>
+
             <script src="js/src/esprima.min.js"></script>
             <script src="js/src/validate.js"></script>
 
