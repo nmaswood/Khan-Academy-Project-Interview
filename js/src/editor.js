@@ -1,5 +1,7 @@
 // Classes and Constants
 
+const editor = ace.edit("editor");
+
 class Output{
 
 	constructor(status, message, val){
@@ -27,7 +29,6 @@ with the dreamweaver/javascript theme.
 */
 
 function initializeEditor(){
-	const editor = ace.edit("editor");
 	editor.setTheme("ace/theme/dreamweaver");
 	editor.getSession().setMode("ace/mode/javascript");
 }
@@ -67,9 +68,9 @@ function runFunction(functionName,func,input){
 
 	if (status === ERROR) return input;
 
-	const output = func(input.val, arg);
+	const output = func(input.val.body, getInputFromWordList(functionName));
 
-	if (name === 'structure'){
+	if (functionName === 'structure'){
 
 		if (output){
 			return new Output(SUCCESS, 'Hooray! The structure is correct!', null)
@@ -82,7 +83,7 @@ function runFunction(functionName,func,input){
 	const value = output[1];
 
 	if(bool){
-		return new Output(SUCCESS, `Hooray! The ${name} test passed!`, null);
+		return new Output(SUCCESS, `Hooray! The ${functionName} test passed!`, null);
 	}
 
 	const str_acc = name === 'white'? ['White Test Failure. The following values were not found: '] :['Black test failure. The following values were found: '];
@@ -96,6 +97,7 @@ function runFunction(functionName,func,input){
 	return new Output(FAILURE, str_final, null);
 }
 
+
 /*
 getInputFromWordList
 
@@ -105,8 +107,8 @@ Grabs words from word list div.
 
 function getInputFromWordList(name){
 
-	const wordList = document.getElementById(`${name}-word-list)`);
-	const children = wordList.children;
+	const wordList = document.getElementById(`${name}-word-list`);
+	const children = [].slice.call(wordList.children);
 
 	if (!children) return [];
 
@@ -137,12 +139,16 @@ function getReturnMessage(name, output){
 function runAllThree(){
 
 	let names = ['white', 'black','structure'];
-	let treeOutput =  parseInput();
+	let treeOutput = parseInput();
 
-	let results = names.map(function (x) {return getReturnMessage(x, treeOutput())});
+	let results = names.map(
+		function (x) {return getReturnMessage(x, treeOutput)
+		});
 
 	return results;
 }
+
+
 
 const globalState = {
 	'black': true,

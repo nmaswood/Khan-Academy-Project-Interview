@@ -19,6 +19,25 @@ const validNodeNames = new Set([
     'Identifier'
 ])
 
+
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+function debounce(func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};
 /*
 
 attrDict
@@ -35,6 +54,15 @@ function attrDict(div, dict) {
 		div.setAttribute(key, dict[key]);
 	}
  }
+
+/*
+throttle
+
+Function -> Float -> 
+
+copied from https://jsfiddle.net/jonathansampson/m7G64/
+
+*/
 
  function throttle (callback, limit) {
     var wait = false;                  // Initially, we're not waiting
@@ -152,11 +180,13 @@ function createWordUnit(type){
 
 	let on = true;
 	inputBar.onkeyup = function(e){
-		
+
 		const which = e.which || e.keyCode;
 		if (which === 13 && on){
 			if(addWordToList(type, inputBar.value)){
 				inputBar.value = '';
+
+				return;
 			} else {
 
 				const style = inputBar.getAttribute('style');
@@ -201,6 +231,16 @@ function createWordUnit(type){
 	return containerDiv;
 }
 
+/*
+
+createWord
+
+String -> Div
+
+Creates a word div element and returns it
+
+*/
+
 function createWord(word){
 	const span = document.createElement('span')
 	span.innerHTML = word;
@@ -208,19 +248,31 @@ function createWord(word){
 	return span;
 }
 
+/*
+
+addWordToList
+
+String -> Word -> 
+
+Takes a word adds it to whatever of the three lists you want.
+
+*/
+
 function addWordToList(name,word){
 
-	/*
-	if (!validNodeNames.has(name)){
+	if (!(validNodeNames.has(word))){
 		return false;
 	}
-	*/
 
 	const list = document.getElementById(`${name}-word-list`);
-	if (list.length > 5) return;
+
+	if (list.children.length > 5) {
+		const first = list.children[0];
+		list.removeChild(first);
+	}
 	const wordDiv = createWord(word);
 	list.appendChild(wordDiv);
-	console.log(list);
+	return true;
 }
 
 function createButtons(){
@@ -262,6 +314,35 @@ function createButtons(){
 	container.appendChild(outerForm);
 }
 
+
+/*
+
+initializeEditor
+
+-> 
+
+This function intializes the ace coder environment
+with the dreamweaver/javascript theme.
+
+*/
+
+var myEfficientFn = debounce(function() {
+	console.log("fuck");
+}, 250);
+
+
+function initializeEditor(){
+	editor.setTheme("ace/theme/dreamweaver");
+	editor.getSession().setMode("ace/mode/javascript");
+	editor.getSession().on('change', function(){
+		myEfficientFn();
+	})
+
+}
+
 initializeEditor();
 createForm();
 createButtons();
+
+f = runAllThree()
+console.log(f);

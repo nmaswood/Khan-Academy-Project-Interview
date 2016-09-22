@@ -79,6 +79,8 @@ This is bfs that terminates when a prohibited value has been encountered.
 
 function blackList(tree, blackList){
 
+    if (!blackList.length) return [true, null];
+
     const blackListSet = new Set(blackList);
     const q = tree.slice();
 
@@ -118,6 +120,8 @@ This is bfs that terminates when all desired values have been encountered,
 */
 
 function whiteList(tree, whiteList){
+
+    if (!whiteList.length) return [true, null];
 
     const whiteListSet = new Set(whiteList);
     const q = tree.slice();
