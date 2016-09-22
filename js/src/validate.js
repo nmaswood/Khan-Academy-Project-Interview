@@ -63,7 +63,7 @@ function enqueueChildren(queue, children){
 
 blackList
 
-Parsed Tree -> List <String> -> Boolean
+Parsed Tree -> List <String> -> <Boolean, Null | String>
 
 This takes a tree and list of node types, it returns false if any of
 those node types appear in the tree.
@@ -82,7 +82,7 @@ function blackList(tree, blackList){
 		let node = q.shift();
 
 		if (blackListSet.has(node.type)){
-			return false;
+			return [false, node.type];
 		}
 
 		let children = getChildren(node)
@@ -92,7 +92,7 @@ function blackList(tree, blackList){
 		}
 	}
 
-	return true;
+	return [true, null];
 };
 
 /*
@@ -102,7 +102,7 @@ whiteList
 This takes a tree and list of node types, it returns true if ALL
 those node types appear in the tree, otherwise it returns false.
 
-Parsed Tree -> List <String> -> Boolean
+Parsed Tree -> List <String> -> <Boolean, Set <String>>
 
 This is bfs that terminates when all desired values have been encountered,
 
@@ -126,7 +126,7 @@ function whiteList(tree, whiteList){
 		}
 	}
 
-	return whiteListSet.size === 0;
+	return [whiteListSet.size === 0, whiteListSet];
 };
 
 /*
