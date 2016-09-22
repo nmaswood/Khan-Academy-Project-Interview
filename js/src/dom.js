@@ -86,6 +86,15 @@ function createWordUnit(type){
 			'id': `${type}-unit`,
 		});
 
+
+	// Initialize container for Span and Input
+	const outerContainerSpan = doc.createElement('div');
+	attrDict(outerContainerSpan,
+		{
+			'class': 'outer-container-span',
+			'id': `${type}-outer-container-span`
+		})
+
 	// Initialize Inner Container Span
 
 	const containerSpan = doc.createElement('span');
@@ -118,7 +127,12 @@ function createWordUnit(type){
 
 	// Append divs in correct order to one another
 
-	let order = [containerSpan, inputBar, wordListContainer];
+
+	outerContainerSpan.appendChild(containerSpan);
+	outerContainerSpan.appendChild(inputBar);
+
+
+	let order = [outerContainerSpan, wordListContainer];
 
 	for (let i = 0; i < order.length; i++){
 		containerDiv.appendChild(order[i]);
@@ -138,7 +152,6 @@ function createButtons(){
 	const outerForm = doc.createElement('form');
 	outerForm.setAttribute('id', 'buttons-container');
 
-
 	// Initialize three buttons
 
 	let values = ['reset', 'manual','run'];
@@ -146,7 +159,7 @@ function createButtons(){
 	function makeButton(name){
 		const button = doc.createElement('button');
 		button.innerHTML = name;
-		attrDict({
+		attrDict(button,{
 			'class': 'selectionButton',
 			'id': `${name}-button`
 		})

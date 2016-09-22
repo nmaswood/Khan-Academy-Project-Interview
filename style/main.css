@@ -1,13 +1,11 @@
+/* Upper Half */
+
 #header {
 	width: 100%;
 	height: 50px;
 	background: #1FAB54;
 ;
 }
-
-.div:hover {
-} 
-
 
 
 #editor { 
@@ -24,9 +22,71 @@
 
 }
 
-#leaf_ubs5sl{
-	fill: yellow;
+/* Lower Half */
+
+/* Input Bars */
+
+#words-outer-container{
+	width: 98%;
+	margin-left:auto;
+	margin-right: auto;
+
 }
+
+.outer-form{
+	margin-top:50px;
+
+}
+
+.word-unit{
+
+}
+
+
+.outer-container-span{
+	width:250px;
+	height:50px;
+}
+
+.word-span{
+
+}
+
+.word-input-bar{
+	float:right;
+}
+
+.word-list{
+
+}
+
+
+/* Buttons */
+
+#buttons{
+	width: 100%;
+}
+
+#buttons-container{
+	width: 350px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.selectionButton {
+    background-color: #1FAB54; /* Green */
+    border: none;
+    color: white;
+    width: 100px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-left:5px;
+	margin-right:5px;
+}
+
+
 
 path:hover{
 	fill: yellow;
@@ -36,3 +96,12 @@ svg:hover ,
 svg:hover { 
   fill: yellow;
 }
+
+/* Feedback */
+#feedback{
+	margin-right: auto;
+	margin-left: auto;
+	width: 100px;
+}
+
+
