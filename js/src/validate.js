@@ -26,21 +26,21 @@ function getChildren(node){
         'raw',
         'label',
         'operator',
-        'test'])
+        'test']);
 
     const acc = [];
 
     for (let key in node){
         if (!exclude.has(key)){
             if(node[key] != null){
-                acc.push(node[key])
+                acc.push(node[key]);
             }
         }
     }
 
     // Acc is an array of arrays htis 
     return [].concat.apply([], acc);
-};
+}
 
 /*
 
@@ -55,9 +55,9 @@ This takes a Queue<Node> and <List> Node and enqueues all children onto the queu
 function enqueueChildren(queue, children){
     var len = children.length;
     for (let i = 0; i < len;i++){
-        queue.push(children[i])
+        queue.push(children[i]);
     }
-};
+}
 
 /*
 
@@ -85,7 +85,7 @@ function blackList(tree, blackList){
             return [false, node.type];
         }
 
-        let children = getChildren(node)
+        let children = getChildren(node);
 
         if (children){
             enqueueChildren(q, children);
@@ -93,7 +93,7 @@ function blackList(tree, blackList){
     }
 
     return [true, null];
-};
+}
 
 /*
 
@@ -119,7 +119,7 @@ function whiteList(tree, whiteList){
 
         whiteListSet.delete(node.type);
 
-        let children = getChildren(node)
+        let children = getChildren(node);
 
         if (children){
             enqueueChildren(q, children);
@@ -127,7 +127,7 @@ function whiteList(tree, whiteList){
     }
 
     return [whiteListSet.size === 0, whiteListSet];
-};
+}
 
 /*
 
@@ -175,10 +175,10 @@ function generalStructure(tree, structures){
             return false;
         }
 
-        const remainingPrime = remaining.slice()
+        const remainingPrime = remaining.slice();
 
         if (root.type){
-            removeInOrder(remainingPrime, root.type)
+            removeInOrder(remainingPrime, root.type);
         }
 
         const children = getChildren(root);
@@ -193,7 +193,7 @@ function generalStructure(tree, structures){
             }
         }
         return false;
-    };
+    }
 
     return f(tree, structures);
-};
+}

@@ -1,0 +1,31 @@
+{
+  "name": "khan-code-editor",
+  "version": "1.0.0",
+  "description": "Build a code editor that validates certain features in somone's code",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nmaswood/Khan-Academy-Project-Interview.git"
+  },
+  "author": "Nasr Maswood",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nmaswood/Khan-Academy-Project-Interview/issues"
+  },
+  "homepage": "https://github.com/nmaswood/Khan-Academy-Project-Interview#readme",
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0",
+    "gulp-babel": "^6.1.2",
+    "gulp-jshint": "^2.0.1"
+  },
+  "dependencies": {
+    "gulp-concat": "^2.6.0",
+    "gulp-order": "^1.1.1",
+    "gulp-strip-debug": "^1.1.0",
+    "gulp-uglify": "^2.0.0"
+  }
+}
