@@ -143,11 +143,11 @@ It mutates A by removing the head.
 
 function removeInOrder(l, value){
 
-	if (!l) return
+	if (!l) return;
 
 	const first = l[0];
 	if (value === first){
-		l.shift()
+		l.shift();
 	}
 }
 
@@ -163,7 +163,7 @@ ever empty this means that all values have been seen and you can return.
 
 */
 
-function generalStructure(treeOne, structures){
+function generalStructure(tree, structures){
 
 	function f(root, remaining){
 
@@ -195,5 +195,5 @@ function generalStructure(treeOne, structures){
 		return false;
 	};
 
-	return f(treeOne, structures);
+	return f(tree, structures);
 };
