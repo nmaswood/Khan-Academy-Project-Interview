@@ -125,6 +125,25 @@ function createWordUnit(type){
 		'id':`${type}-word-list`
 	});
 
+
+	// Add dummy values for word list
+
+
+	function createWord(word){
+		const span = doc.createElement('span')
+		span.innerHTML = word;
+		span.setAttribute('class', 'word');
+		return span;
+	}
+
+	const init_words = ['if', 'then' ,'else'];
+	const wordDivs = init_words.map(createWord);
+
+	for (let i  = 0; i < wordDivs.length; i++){
+		wordListContainer.appendChild(wordDivs[i]);
+	}
+
+
 	// Append divs in correct order to one another
 
 

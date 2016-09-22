@@ -27,9 +27,7 @@
 /* Input Bars */
 
 #words-outer-container{
-	width: 98%;
-	margin-left:auto;
-	margin-right: auto;
+	margin-left: 10px;
 
 }
 
@@ -42,23 +40,43 @@
 
 }
 
-
 .outer-container-span{
 	width:250px;
 	height:50px;
+	display: inline-block;
 }
 
 .word-span{
+	line-height: 40px;
 
 }
 
 .word-input-bar{
 	float:right;
+	border:0;
+	border-bottom: 2px solid;
+	color:green;
+	font-color: red;
 }
+
+/* Word List */
 
 .word-list{
-
+	display: inline;
+	margin-left:30px;
 }
+.word{
+	margin-right:10px;
+	font-size: 20px;
+}
+
+input:focus {
+    outline-width: 0;
+}
+
+
+
+
 
 
 /* Buttons */
