@@ -66,8 +66,9 @@
 	width: 250px;
 	border:0;
 	border-bottom: 2px solid;
-	color:green;
-	font-color: red;
+	border-bottom-color:#34495e;
+	border-bottom-width: 3px;
+	color:#3498db;
 }
 
 /* Word List */
@@ -77,6 +78,7 @@
 	margin-left:30px;
 }
 .word{
+	color:#16a085;
 	margin-right:10px;
 	font-size: 30px;
 }

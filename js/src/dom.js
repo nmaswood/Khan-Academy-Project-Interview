@@ -161,13 +161,15 @@ function createWordUnit(type){
 		if (!(len < globalState.wordLineLimit)){
 			(function(){
 			const style = inputBar.getAttribute('style');
-			const stylePrime = 'color:red';
+			const stylePrime = 'color:#e74c3c';
 
 			inputBar.setAttribute('style', stylePrime);
 		})()
 		return;
-
+		} else {
+			inputBar.setAttribute('style','')
 		}
+
 
 		if (which === 13 && on){
 			if(addWordToList(type, inputBar.value)){
@@ -341,6 +343,10 @@ function reset(){
 
 	function resetOne(name){
 		const wordList = document.getElementById(`${name}-word-list`);
+		const input = document.getElementById(`${name}-word-input-bar`);
+
+		input.setAttribute('style', '');
+
 
 		while (wordList.firstChild) {
 		    wordList.removeChild(wordList.firstChild);
