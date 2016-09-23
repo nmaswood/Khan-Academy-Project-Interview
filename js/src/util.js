@@ -40,7 +40,6 @@ is typing.
 
 */
 
-const TIME_OUT = 750;
 /*
 
 debounce
@@ -155,6 +154,7 @@ converts a set to a string
 */
 
 function setToString(set){
+    console.log('set',set);
     if (set.size == 1){
         for (let x in set){
             return x;

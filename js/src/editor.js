@@ -34,12 +34,8 @@ function parseInput(){
 	try {
 
 		const parsed = esprima.parse(text);
-		console.log(text);
-		console.log(parsed);
-
 		return new Output(SUCCESS, 'The tree was correctly parsed', parsed)
 	} catch(err){
-		console.log ('could not parse', text);
 		return new Output(ERROR, err, null)
 	}
 }
@@ -76,7 +72,13 @@ function runFunction(functionName,func,input){
 
 	if(bool) return new Output(SUCCESS, `Hooray! The ${functionName} test passed!`, null);
 
-	const asString = setToString(value);
+	let asString = (function(){
+		if(functionName === 'white'){
+			return setToString(value)
+		} else {
+			return value;
+	}})();
+	console.log ("asString", asString);
 
 	return new Output(FAILURE, asString, null);
 }
@@ -132,6 +134,7 @@ function runAllThree(){
 	let names = ['white', 'black','structure'];
 	let treeOutput = parseInput();
 
-	return names.map(function (x) {return run(x, treeOutput)});
+	const x = names.map(function (x) {return run(x, treeOutput)});
+	return x;
 
 }

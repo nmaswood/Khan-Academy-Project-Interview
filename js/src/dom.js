@@ -8,17 +8,23 @@ This object keeps track of all environment variables.
 
 */
 
-const globalState = {
-	'manual': false,
-	'black': 'Everything seems to be alright',
-	'white': 'Everything seems to be alright',
-	'structure': 'Everything seems to be alright'
+function generateGlobalState(){
+	return {
+		'manual': false,
+		'black': 'The black test seems to be passing.',
+		'white': 'The white test seems to be passing',
+		'structure': 'The structure test seems to be passing',
+		'wrongInputTimeout': 2000,
+		'debounceTimeout': 750
+	}
 }
+
+let globalState = generateGlobalState();
 
 function createCheckMacro(name){
 	const check = createCheckMark(name);
 	check.onmouseover = function(){
-		showFeedback(`${name}: ${globalState[name]}`);
+		showFeedback(globalState[name]);
 	};
 	check.onmouseout = removeFeedback;
 	return check;
@@ -29,7 +35,7 @@ function createXMacro(name){
 	const x = createXMark(name);
 
 	x.onmouseover = function(){
-		showFeedback(`${name}: ${globalState[name]}`);
+		showFeedback(globalState[name]);
 	};
 
 	x.onmouseout = removeFeedback;
@@ -163,7 +169,7 @@ function createWordUnit(type){
 					function(){
 						on = true;
 						inputBar.setAttribute('style', style);
-					}, 2000);
+					}, globalState.wrongInputTimeout);
 
 			}
 		}
@@ -271,7 +277,7 @@ function createButtons(){
 		button.onclick = {
 			'reset': reset,
 			'run': main,
-			'toggleManual': function(){globalState.manual = !globalState.manual;}
+			'manual': toggleManual
 		}[name]
 
 		return button;
@@ -299,6 +305,8 @@ Removes all words from word list.
 
 */
 function reset(){
+
+	globalState = generateGlobalState();
 
 	function resetOne(name){
 		const wordList = document.getElementById(`${name}-word-list`);
@@ -354,6 +362,27 @@ function replaceNodeWith(name, newNode){
 	div.replaceChild(newNode,div.children[0]);
 }
 
+/* 
+toggleManual
+
+Changes manual color from green to black and vice versa
+
+*/
+
+function toggleManual(){
+
+	const manual = globalState['manual'];
+
+	const button = document.getElementById('manual-button');
+	const newStyle = manual? '': 'background:black;';
+
+	button.setAttribute('style', newStyle);
+
+	globalState['manual'] = !manual;
+}
+
+
+
 /*
 
 main
@@ -376,8 +405,10 @@ function main(){
 
 		let status = value.status;
 		let message = value.message;
+		console.log(message);
 
 		globalState[name] = message;
+		console.log(message);
 
 		let mark = status == ERROR || status == FAILURE? createXMacro(name) :createCheckMacro(name);
 
@@ -388,13 +419,37 @@ function main(){
 /*
 debounced
 
-debounced main function that is run on type
+debounced main function that is run on change in type or when a new input is added.
+This function times how long it takes to run and adjusts the debounce time accordiningly.
+If manual is set to true this functionality is turned off.
 
 */
 
 var debounced = debounce(function() {
-	main();
-}, TIME_OUT);
+
+	const start = performance.now()
+
+	if (!globalState.manual){
+		main();
+	}
+
+	const end = performance.now()
+
+	const difference = end - start;
+
+
+	if(difference > 10){
+		globalState.debounceTimeout = 1000;
+	} else if (difference > 20){
+		globalState.debounceTimeout = 1500;
+	} else if(difference > 50){
+		alert("You have a lot of code which is slowing down validation. The system is turning off auto for better performance.");
+		globalState.manual = true;
+	}
+
+	console.log(difference);
+
+}, globalState.debounceTimeout);
 
 /*
 
@@ -408,6 +463,8 @@ with the dreamweaver/javascript theme.
 */
 
 function initializeEditor(){
+	//mono_industrial
+	//merbivore_soft
 	editor.setTheme("ace/theme/dreamweaver");
 	editor.getSession().setMode("ace/mode/javascript");
 	editor.getSession().on('change', function(){
