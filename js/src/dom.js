@@ -22,7 +22,7 @@ function generateGlobalState(){
 let globalState = generateGlobalState();
 
 function createCheckMacro(name){
-	const check = createCheckMark(name);
+	const check = createSvg(svgDict.check);
 	check.onmouseover = function(){
 		showFeedback(globalState[name]);
 	};
@@ -32,7 +32,7 @@ function createCheckMacro(name){
 
 function createXMacro(name){
 
-	const x = createXMark(name);
+	const x = createSvg(svgDict.x);
 
 	x.onmouseover = function(){
 		showFeedback(globalState[name]);
@@ -41,6 +41,8 @@ function createXMacro(name){
 	x.onmouseout = removeFeedback;
 	return x;
 }
+
+
 
 /*
 
@@ -267,20 +269,33 @@ function createButtons(){
 	let values = ['reset', 'manual','run'];
 
 	function makeButton(name){
-		const button = doc.createElement('button');
-		button.innerHTML = name;
-		attrDict(button,{
-			'class': 'selectionButton',
-			'id': `${name}-button`
-		})
 
-		button.onclick = {
+		console.log(name);
+		const svg = createSvg(svgDict[name])
+		svg.setAttribute('id',`${name}-button` )
+
+		const feedbackString = {
+			'reset': 'Click on this button to clear all words and start over.',
+			'run': 'Click button the manually run all tests.',
+			'manual': 'Click this button to turn off automatic tests. This might be a good idea if things are slow.'
+		}[name]
+
+		svg.onmouseover = function(){
+
+			showFeedback(feedbackString);
+		}
+
+		svg.onmouseout = removeFeedback;
+
+		svg.onclick = {
 			'reset': reset,
 			'run': main,
 			'manual': toggleManual
 		}[name]
 
-		return button;
+		return svg;
+
+		//return button;
 	}
 
 	const buttons = values.map(makeButton);

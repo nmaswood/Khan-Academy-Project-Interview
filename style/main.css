@@ -200,5 +200,19 @@ svg:hover {
 	height: 50px;
 	background: #e74c3c;
 }
+.svg-icon {
+cursor:pointer;
+  width: 5em;
+  height: 5em;
+}
 
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #4691f6;
+}
 
+.svg-icon circle {
+  stroke: #4691f6;
+  stroke-width: 1;
+}
