@@ -4,11 +4,10 @@ var concat = require('gulp-concat');
 var stripDebug = require('gulp-strip-debug')
 var babel = require('gulp-babel')
 var uglify = require('gulp-uglify');
-var order = require('gulp-order');
 
 gulp.task('scripts', function(){
 
-	gulp.src('./js/src/validate.js')
+	gulp.src(['./js/src/util.js','./js/src/editor.js','./js/src/validate.js','./js/src/dom.js' ])
 		.pipe(babel({
 			presets:['es2015']
 		}))
@@ -16,8 +15,19 @@ gulp.task('scripts', function(){
 		.pipe(gulp.dest('./temp'))
 
 
-    gulp.src(['./js/src/esprima.min.js', './temp/*.js'])
+    gulp.src([
+
+    	'./js/lib/src-min-noconflict/ace.js',
+    	'./js/lib/src-min-noconflict/worker-javascript.js',
+    	'./js/lib/src-min-noconflict/mode-javascript.js',
+    	'./js/lib/src-min-noconflict/theme-dreamweaver.js',
+    	'./js/lib/esprima.min.js',
+    	 './temp/*.js'
+
+    	])
         .pipe(concat('script.js'))
         .pipe(uglify())
         .pipe(gulp.dest('./'))
+
 });
+

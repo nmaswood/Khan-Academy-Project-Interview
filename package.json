@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "gulp-concat": "^2.6.0",
+    "gulp-inject": "^4.1.0",
     "gulp-order": "^1.1.1",
     "gulp-strip-debug": "^1.1.0",
     "gulp-uglify": "^2.0.0"

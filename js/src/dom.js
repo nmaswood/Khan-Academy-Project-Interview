@@ -42,8 +42,6 @@ function createXMacro(name) {
     return x;
 }
 
-
-
 /*
 
 createForm
@@ -84,7 +82,6 @@ function createForm() {
     // append form to dom
 
     const wordsOuterContainer = doc.getElementById('words-outer-container');
-
     wordsOuterContainer.appendChild(outerForm);
 }
 
@@ -112,7 +109,6 @@ function createWordUnit(type) {
         'class': 'word-unit',
         'id': `${type}-unit`,
     });
-
 
     // Create Checkmark
 
@@ -164,7 +160,6 @@ function createWordUnit(type) {
             inputBar.setAttribute('style', '')
         }
 
-
         if (which === 13 && on) {
             if (addWordToList(type, inputBar.value)) {
                 inputBar.value = '';
@@ -188,7 +183,6 @@ function createWordUnit(type) {
             }
         }
     }
-
 
     // Initialize Word List Container
 
@@ -306,8 +300,6 @@ function createButtons() {
         }[name];
 
         return svg;
-
-        //return button;
     }
 
     const buttons = values.map(makeButton);
@@ -331,6 +323,7 @@ reset
 Removes all words from word list.
 
 */
+
 function reset() {
 
     globalState = generateGlobalState();
@@ -340,7 +333,6 @@ function reset() {
         const input = document.getElementById(`${name}-word-input-bar`);
 
         input.setAttribute('style', '');
-
 
         while (wordList.firstChild) {
             wordList.removeChild(wordList.firstChild);
@@ -378,8 +370,7 @@ Clears the feedback div
 */
 
 function removeFeedback() {
-    const feedback = document.getElementById('feedback');
-    feedback.innerHTML = '';
+    document.getElementById('feedback').innerHTML = '';
 }
 
 /*
@@ -412,8 +403,6 @@ function toggleManual() {
     globalState['manual'] = !manual;
 }
 
-
-
 /*
 
 main
@@ -430,16 +419,13 @@ function main() {
 
     for (let i = 0; i < values.length; i++) {
 
-        console.log("just ran main");
         let value = values[i];
         let name = names[i];
 
         let status = value.status;
         let message = value.message;
-        console.log(message);
 
         globalState[name] = message;
-        console.log(message);
 
         let mark = status == ERROR || status == FAILURE ? createXMacro(name) : createCheckMacro(name);
 
@@ -468,17 +454,16 @@ var debounced = debounce(function() {
 
     const difference = end - start;
 
-
     if (difference > 10) {
         globalState.debounceTimeout = 1000;
     } else if (difference > 20) {
         globalState.debounceTimeout = 1500;
     } else if (difference > 50) {
-        alert("You have a lot of code which is slowing down validation. The system is turning off auto for better performance.");
-        globalState.manual = true;
+    	if(!globalState.manual){
+	    	toggleManual();
+	        alert("You have a lot of code which is slowing down validation. The system is turning off auto for better performance.");
+	    }
     }
-
-    console.log(difference);
 
 }, globalState.debounceTimeout);
 
@@ -494,20 +479,18 @@ with the dreamweaver/javascript theme.
 */
 
 function initializeEditor() {
-    //mono_industrial
-    //merbivore_soft
     editor.setTheme("ace/theme/dreamweaver");
     editor.getSession().setMode("ace/mode/javascript");
     editor.getSession().on('change', function() {
         debounced();
-    })
-
+    });
 }
 
 function init() {
     initializeEditor();
     createForm();
     createButtons();
+    console.log ("Note you might be seeing some error about javascript-worker missing. This is due to minification and is harmless. Please ignore.")
 }
 
 init();
