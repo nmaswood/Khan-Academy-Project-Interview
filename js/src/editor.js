@@ -74,19 +74,11 @@ function runFunction(functionName,func,input){
 	const bool = output[0];
 	const value = output[1];
 
-	if(bool){
-		return new Output(SUCCESS, `Hooray! The ${functionName} test passed!`, null);
-	}
+	if(bool) return new Output(SUCCESS, `Hooray! The ${functionName} test passed!`, null);
 
-	const str_acc = name === 'white'? ['White Test Failure. The following values were not found: '] :['Black test failure. The following values were found: '];
+	const asString = setToString(value);
 
-	for (let word in value){
-		str_acc.push(value);
-	}
-
-	const str_final = str_acc.join(' ');
-
-	return new Output(FAILURE, str_final, null);
+	return new Output(FAILURE, asString, null);
 }
 
 

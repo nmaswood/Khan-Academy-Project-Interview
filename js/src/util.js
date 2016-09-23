@@ -143,3 +143,23 @@ function createXMark(name){
 
     return span;
 }
+
+/*
+
+setToString
+
+set -> String
+
+converts a set to a string
+
+*/
+
+function setToString(set){
+    if (set.size == 1){
+        for (let x in set){
+            return x;
+        }
+    }
+    const asList = Array.from(set);
+    return asList.join(' ');
+}

@@ -64,7 +64,7 @@ function createForm(){
 
 	// create three word units
 
-	const values = ['black', 'white', 'structure'];
+	const values = ['white','black','structure'];
 
 	const units = values.map(createWordUnit);
 
@@ -148,6 +148,7 @@ function createWordUnit(type){
 		if (which === 13 && on){
 			if(addWordToList(type, inputBar.value)){
 				inputBar.value = '';
+				main();
 
 				return;
 			} else {
@@ -308,7 +309,6 @@ function reset(){
 
 		const mark = createCheckMacro(name);
 
-
 		replaceNodeWith(name, mark);
 	};
 
@@ -328,9 +328,7 @@ Sets the feedback div equal to the string
 */
 
 function showFeedback(string){
-	console.log ("fucking fuck");
 	const feedback = document.getElementById('feedback');
-	console.log(feedback);
 	feedback.innerHTML = string;
 }
 
@@ -372,6 +370,7 @@ function main(){
 
 	for (let i = 0; i < values.length; i++){
 
+		console.log ("just ran main");
 		let value = values[i];
 		let name = names[i];
 
@@ -379,7 +378,6 @@ function main(){
 		let message = value.message;
 
 		globalState[name] = message;
-		console.log ("changed state")
 
 		let mark = status == ERROR || status == FAILURE? createXMacro(name) :createCheckMacro(name);
 

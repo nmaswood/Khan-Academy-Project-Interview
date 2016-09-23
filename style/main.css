@@ -164,6 +164,7 @@ svg:hover {
 	font-weight: lighter;
 	font-size:10px;
 	margin-right:8px;
+	margin-left:4px;
 	color:#F75735 ;
     display:inline-block;
     -webkit-transform:scale(2,1.7); /* Safari and Chrome */
@@ -172,3 +173,15 @@ svg:hover {
     -o-transform:scale(2,1.7); /* Opera */
     transform:scale(2,1.7); /* W3C */
 }
+
+/* Footer */
+
+.footer{
+	width:100%;
+	position: absolute;
+	bottom:0;
+	height: 50px;
+	background: #1FAB54;
+}
+
+
