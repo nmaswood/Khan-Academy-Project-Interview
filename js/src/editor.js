@@ -29,10 +29,17 @@ This function grabs the code from the editor and parses it if possible.
 
 function parseInput(){
 
+	const text = editor.getValue();
+
 	try {
-		return new Output(SUCCESS, 'The tree was correctly parsed', esprima.parse(editor.getValue()))
+
+		const parsed = esprima.parse(text);
+		console.log(text);
+		console.log(parsed);
+
+		return new Output(SUCCESS, 'The tree was correctly parsed', parsed)
 	} catch(err){
-		console.log ("Failed to parse");
+		console.log ('could not parse', text);
 		return new Output(ERROR, err, null)
 	}
 }
@@ -50,7 +57,6 @@ Takes the name of the function and a parsed tree through input
 function runFunction(functionName,func,input){
 
 	const status = input.status;
-	console.log (status);
 
 	if (status === ERROR) return input;
 

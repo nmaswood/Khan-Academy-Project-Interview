@@ -15,6 +15,27 @@ const globalState = {
 	'structure': 'Everything seems to be alright'
 }
 
+function createCheckMacro(name){
+	const check = createCheckMark(name);
+	check.onmouseover = function(){
+		showFeedback(`${name}: ${globalState[name]}`);
+	};
+	check.onmouseout = removeFeedback;
+	return check;
+}
+
+function createXMacro(name){
+
+	const x = createXMark(name);
+
+	x.onmouseover = function(){
+		showFeedback(`${name}: ${globalState[name]}`);
+	};
+
+	x.onmouseout = removeFeedback;
+	return x;
+}
+
 /*
 
 createForm
@@ -89,7 +110,7 @@ function createWordUnit(type){
 
 	// Create Checkmark
 
-	const checkMark = createCheckMark(type);
+	const checkMark = createCheckMacro(type);
 
 	// Initialize container for Span and Input
 	const outerContainerSpan = createDiv();
@@ -158,7 +179,6 @@ function createWordUnit(type){
 	});
 
 	// Append divs in correct order to one another
-
 
 	outerContainerSpan.appendChild(containerSpan);
 	outerContainerSpan.appendChild(inputBar);
@@ -281,14 +301,15 @@ function reset(){
 
 	function resetOne(name){
 		const wordList = document.getElementById(`${name}-word-list`);
-		console.log(`${name}-word-list`)
+
 		while (wordList.firstChild) {
 		    wordList.removeChild(wordList.firstChild);
 		}	
 
-		const unit = document.getElementById(`${name}-unit`);
+		const mark = createCheckMacro(name);
 
-		unit.children[0] = createCheckMark();
+
+		replaceNodeWith(name, mark);
 	};
 
 	let names = ['white', 'black', 'structure'];
@@ -296,7 +317,6 @@ function reset(){
 	for (let i =0 ; i < names.length; i++){
 		resetOne(names[i]);
 	}
-
 }
 
 /*
@@ -308,7 +328,9 @@ Sets the feedback div equal to the string
 */
 
 function showFeedback(string){
+	console.log ("fucking fuck");
 	const feedback = document.getElementById('feedback');
+	console.log(feedback);
 	feedback.innerHTML = string;
 }
 
@@ -345,8 +367,6 @@ changes state to reflect whether those api calls where succesful.
 
 function main(){
 
-	console.log ("Ran main");
-
 	const values = runAllThree();
 	const names = ['white', 'black','structure'];
 
@@ -359,9 +379,10 @@ function main(){
 		let message = value.message;
 
 		globalState[name] = message;
+		console.log ("changed state")
 
-		let mark = status == ERROR || status == FAILURE? createXMark(name): createCheckMark(name);
-		console.log (status);
+		let mark = status == ERROR || status == FAILURE? createXMacro(name) :createCheckMacro(name);
+
 		replaceNodeWith(name, mark);
 	}
 }
@@ -397,6 +418,10 @@ function initializeEditor(){
 
 }
 
-initializeEditor();
-createForm();
-createButtons();
+function init(){
+	initializeEditor();
+	createForm();
+	createButtons();
+}
+
+init();
