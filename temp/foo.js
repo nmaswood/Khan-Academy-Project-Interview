@@ -791,9 +791,9 @@ function createButtons() {
         svg.setAttribute('id', name + '-button');
 
         var feedbackString = {
-            'reset': 'Click on this button to clear all words and start over.',
-            'run': 'Click this button the manually run all tests.',
-            'manual': 'Click this button to turn off automatic tests. This might be a good idea if things are slow.'
+            'reset': 'Click to clear all words and start over.',
+            'run': 'Click to manually run all tests.',
+            'manual': 'Turn off automatic tests. This might be a good idea if things are slow.'
         }[name];
 
         svg.onmouseover = function () {

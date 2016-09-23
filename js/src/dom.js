@@ -281,9 +281,9 @@ function createButtons() {
         svg.setAttribute('id', `${name}-button`)
 
         const feedbackString = {
-            'reset': 'Click on this button to clear all words and start over.',
-            'run': 'Click this button the manually run all tests.',
-            'manual': 'Click this button to turn off automatic tests. This might be a good idea if things are slow.'
+            'reset': 'Click to clear all words and start over.',
+            'run': 'Click to manually run all tests.',
+            'manual': 'Turn off automatic tests. This might be a good idea if things are slow.'
         }[name]
 
         svg.onmouseover = function() {
@@ -467,6 +467,98 @@ var debounced = debounce(function() {
 
 }, globalState.debounceTimeout);
 
+
+
+function showInstructions(){
+	const div = document.getElementById('instructions');
+	div.setAttribute('style', '');
+}
+
+function hideInstructions(){
+	const div = document.getElementById('instructions');
+	div.setAttribute('style', 'display:none');
+}
+
+
+function help(){
+
+	const container = document.getElementById('help');
+	const svg = createSvg(svgDict.help);
+	svg.onmouseover = showInstructions;
+	svg.onmouseout = hideInstructions;
+
+	container.appendChild(svg);
+}
+
+function createQuestion(q, a){
+
+	const outerContainer = createDiv();
+	outerContainer.setAttribute('class', 'question-container');
+
+	const question = createDiv();
+	question.setAttribute('class', 'question');
+	question.innerHTML = q;
+
+	const answer = createDiv();
+	answer.setAttribute('class', 'answer');
+	answer.innerHTML = a;
+
+	outerContainer.appendChild(question);
+	outerContainer.appendChild(answer);
+
+	return outerContainer;
+}
+
+const questions = [
+	
+	['What does this do?',
+	 'This code editor can help determine if your code conforms to certain expectations.'
+	],
+	[
+		'What are these expectations?',
+		`A program is a series of instructions. These instructions can be structured in many different ways. We want to you structure your code based on certain constraints.`
+	],
+	[
+	`What does 'white list' do?`,
+	`For white list you must have all the structures listed some where in your code. E.g. IfStatement -> if(true){} PASSES` 
+	],
+	[
+	`What does 'black list' do?`,
+	`For 'black list' you may not have any of the structures listed any where in your code. IfStatement -> while(true){} PASSES`
+	],
+	[
+	`What does 'structure' do?`,
+	'For the structure you must have the structures listed in nested order. E.g. IfStatement WhileStatement -> if(true){while(true){}} PASSES'
+	],
+	[
+	'How do I run tests?',
+	'Type a valid Javascript node name into any of the input bars and hit enter. When you are typing the tests will automatically be run'
+	],
+	[
+	`What are Javascript node names?`,
+	`These node names come from a defined standard. For starters try ForStatement, IfStatement, WhileStatement or VariableDeclaration. (Case sensitive)`
+	],
+	[
+	'The code editor is running super slow what do I do?',
+	'The editor will try and adjust to account for slow speeds, but you still think it is slow. Put it into manual mode and run the tests by hand.'
+	]
+]
+
+function createQuestions(){
+
+	const qs = questions.map(function(x){return createQuestion(x[0], x[1])});
+
+	const div = document.getElementById('faq');
+
+	for (let i = 0; i < qs.length;i++){
+		div.appendChild(qs[i]);
+	}
+}
+
+createQuestions();
+
+
+
 /*
 
 initializeEditor
@@ -490,6 +582,7 @@ function init() {
     initializeEditor();
     createForm();
     createButtons();
+    help();
     console.log ("Note you might be seeing some error about javascript-worker missing. This is due to minification and is harmless. Please ignore.")
 }
 
