@@ -95,31 +95,17 @@ button:active {
 /* Buttons */
 
 #buttons{
-	width: 100%;
 }
 
 #buttons-container{
-	width: 350px;
-	margin-left:auto;
-	margin-right:auto;
+	position: absolute;
+	left:61px;
+	top:8px;
+
 }
 
 .selectionButton {
-	border-radius: 10px;
-    background-color: #1FAB54; /* Green */
-    border: none;
-    color: white;
-    width: 200px;
-    height:32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-left:5px;
-	margin-right:5px;
 }
-
-
 
 path:hover{
 	fill: yellow;
@@ -134,7 +120,9 @@ svg:hover {
 #feedback{
 	margin-right: auto;
 	margin-left: auto;
-	width: 800px;
+	width: 1000px;
+	height: 200px;
+	line-height: 50px;
 	font-size:35px;
 	margin-top:50px;
 	text-align: -webkit-center;
@@ -201,9 +189,10 @@ svg:hover {
 	background: #e74c3c;
 }
 .svg-icon {
+	margin-right: 15px;
 cursor:pointer;
-  width: 5em;
-  height: 5em;
+  width: 2.5em;
+  height:2.5em;
 }
 
 .svg-icon path,
@@ -216,3 +205,32 @@ cursor:pointer;
   stroke: #4691f6;
   stroke-width: 1;
 }
+
+.svg-icon-button {
+cursor:pointer;
+  width: 3em;
+  height: 3em;
+}
+
+.svg-icon-button path,
+.svg-icon-button polygon,
+.svg-icon-button rect {
+  fill: #4691f6;
+}
+
+.svg-icon-button circle {
+  stroke: #4691f6;
+  stroke-width: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+

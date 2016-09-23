@@ -291,7 +291,7 @@ function createButtons(){
 			'reset': reset,
 			'run': main,
 			'manual': toggleManual
-		}[name]
+		}[name];
 
 		return svg;
 
