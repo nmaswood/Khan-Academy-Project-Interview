@@ -15,7 +15,8 @@ function generateGlobalState(){
 		'white': 'The white test seems to be passing',
 		'structure': 'The structure test seems to be passing',
 		'wrongInputTimeout': 2000,
-		'debounceTimeout': 750
+		'debounceTimeout': 750,
+		'wordLineLimit':5
 	}
 }
 
@@ -153,6 +154,21 @@ function createWordUnit(type){
 	inputBar.onkeyup = function(e){
 
 		const which = e.which || e.keyCode;
+
+
+		const len = getInputFromWordList(type).length;
+
+		if (!(len < globalState.wordLineLimit)){
+			(function(){
+			const style = inputBar.getAttribute('style');
+			const stylePrime = 'color:red';
+
+			inputBar.setAttribute('style', stylePrime);
+		})()
+		return;
+
+		}
+
 		if (which === 13 && on){
 			if(addWordToList(type, inputBar.value)){
 				inputBar.value = '';
