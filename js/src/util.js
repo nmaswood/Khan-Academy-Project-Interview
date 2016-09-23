@@ -40,7 +40,7 @@ is typing.
 
 */
 
-const TIME_OUT = 250;
+const TIME_OUT = 750;
 /*
 
 debounce
@@ -108,14 +108,15 @@ function createSpan(){
 
 createCheckMark
 
--> Span
+String -> Span
 
 */
 
-function createCheckMark(){
+function createCheckMark(name){
     const span = createSpan();
 
     span.setAttribute('class', 'checkmark');
+    span.id = `${name}-checkmark`;
     const stem = createDiv();
     stem.setAttribute('class', 'checkmark_stem');
     const kick = document.createElement('div');
@@ -130,12 +131,13 @@ function createCheckMark(){
 /*
 createXMark
 
--> Span
+String -> Span
 
 */
 
-function createXMark(){
+function createXMark(name){
     const span = createSpan();
+    span.id = `${name}-x`;
     span.innerHTML = 'x';
     span.setAttribute('class', 'X');
 

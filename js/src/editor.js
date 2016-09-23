@@ -17,7 +17,6 @@ const ERROR = 0;
 const FAILURE = 1;
 const SUCCESS = 2;
 
-
 /*
 
 parseInput
@@ -33,6 +32,7 @@ function parseInput(){
 	try {
 		return new Output(SUCCESS, 'The tree was correctly parsed', esprima.parse(editor.getValue()))
 	} catch(err){
+		console.log ("Failed to parse");
 		return new Output(ERROR, err, null)
 	}
 }
@@ -50,6 +50,7 @@ Takes the name of the function and a parsed tree through input
 function runFunction(functionName,func,input){
 
 	const status = input.status;
+	console.log (status);
 
 	if (status === ERROR) return input;
 
@@ -101,6 +102,13 @@ function getInputFromWordList(name){
 
 }
 
+/* 
+run
+
+String -> Output -> List <Output>
+
+Runs an api call for specific function
+*/
 function run(name, output){
 
 	const words = getInputFromWordList(name);
@@ -111,24 +119,21 @@ function run(name, output){
 		'white': whiteList, 
 		'black': blackList,
 		'structure': generalStructure
-	}[name]
+	}[name];
 
 	return runFunction(name,whichFunction,output)
 }
+/*
+runAllThree
 
-function getReturnMessage(name, output){
-	const res = run(name,output);
-	return res.message;
-}
+Runs an api call for all three functions.
+*/
 
 function runAllThree(){
 
 	let names = ['white', 'black','structure'];
 	let treeOutput = parseInput();
 
-	let results = names.map(
-		function (x) {return getReturnMessage(x, treeOutput)
-		});
+	return names.map(function (x) {return run(x, treeOutput)});
 
-	return results;
 }

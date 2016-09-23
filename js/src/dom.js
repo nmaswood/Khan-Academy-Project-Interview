@@ -9,42 +9,11 @@ This object keeps track of all environment variables.
 */
 
 const globalState = {
-	'manual': false
+	'manual': false,
+	'black': 'Everything seems to be alright',
+	'white': 'Everything seems to be alright',
+	'structure': 'Everything seems to be alright'
 }
-
-
-
-function createDiv(){
-	return document.createElement('div');
-}
-
-function createSpan(){
-	return document.createElement('span');
-}
-
- function createCheckMark(){
-	const span = createSpan();
-
-	span.setAttribute('class', 'checkmark');
-	const stem = createDiv();
-	stem.setAttribute('class', 'checkmark_stem');
-	const kick = document.createElement('div');
-	kick.setAttribute('class', 'checkmark_kick');
-
-	span.appendChild(stem);
-	span.appendChild(kick);
-
-	return span;
-}
-
-function createXMark(){
-	const span = createSpan();
-	span.innerHTML = 'x';
-	span.setAttribute('class', 'X');
-
-	return span;
-}
-
 
 /*
 
@@ -120,7 +89,7 @@ function createWordUnit(type){
 
 	// Create Checkmark
 
-	const checkMark = createCheckMark();
+	const checkMark = createCheckMark(type);
 
 	// Initialize container for Span and Input
 	const outerContainerSpan = createDiv();
@@ -248,6 +217,13 @@ function addWordToList(name,word){
 	return true;
 }
 
+/*
+createButtons
+
+creates  run, manual and reset buttons and attaches
+functions to them
+*/
+
 function createButtons(){
 
 	// Store reference to document
@@ -270,6 +246,13 @@ function createButtons(){
 			'class': 'selectionButton',
 			'id': `${name}-button`
 		})
+
+		button.onclick = {
+			'reset': reset,
+			'run': main,
+			'toggleManual': function(){globalState.manual = !globalState.manual;}
+		}[name]
+
 		return button;
 	}
 
@@ -289,6 +272,113 @@ function createButtons(){
 
 /*
 
+reset
+
+Removes all words from word list.
+
+*/
+function reset(){
+
+	function resetOne(name){
+		const wordList = document.getElementById(`${name}-word-list`);
+		console.log(`${name}-word-list`)
+		while (wordList.firstChild) {
+		    wordList.removeChild(wordList.firstChild);
+		}	
+
+		const unit = document.getElementById(`${name}-unit`);
+
+		unit.children[0] = createCheckMark();
+	};
+
+	let names = ['white', 'black', 'structure'];
+
+	for (let i =0 ; i < names.length; i++){
+		resetOne(names[i]);
+	}
+
+}
+
+/*
+showFeedback
+
+String-> 
+
+Sets the feedback div equal to the string
+*/
+
+function showFeedback(string){
+	const feedback = document.getElementById('feedback');
+	feedback.innerHTML = string;
+}
+
+/*
+removeFeedback
+
+Clears the feedback div
+*/
+
+function removeFeedback(){
+	const feedback = document.getElementById('feedback');
+	feedback.innerHTML = '';
+}
+
+/*
+replaceNodeWith
+
+Locates first node in unit and swaps it other with another.
+*/
+
+function replaceNodeWith(name, newNode){
+	const div = document.getElementById(`${name}-unit`);
+	div.replaceChild(newNode,div.children[0]);
+}
+
+/*
+
+main
+
+This function runs three api calls on text area input. Then 
+changes state to reflect whether those api calls where succesful.
+
+*/
+
+function main(){
+
+	console.log ("Ran main");
+
+	const values = runAllThree();
+	const names = ['white', 'black','structure'];
+
+	for (let i = 0; i < values.length; i++){
+
+		let value = values[i];
+		let name = names[i];
+
+		let status = value.status;
+		let message = value.message;
+
+		globalState[name] = message;
+
+		let mark = status == ERROR || status == FAILURE? createXMark(name): createCheckMark(name);
+		console.log (status);
+		replaceNodeWith(name, mark);
+	}
+}
+
+/*
+debounced
+
+debounced main function that is run on type
+
+*/
+
+var debounced = debounce(function() {
+	main();
+}, TIME_OUT);
+
+/*
+
 initializeEditor
 
 -> 
@@ -298,56 +388,11 @@ with the dreamweaver/javascript theme.
 
 */
 
-
-function reset(){
-
-	function resetOne(name){
-		const wordList = document.getElementById('${name}-word-list');
-		while (wordList.firstChild) {
-		    wordList.removeChild(myNode.firstChild);
-		}	
-
-		const unit = document.getElementById('${name}-unit');
-
-		unit.children[0] = createCheckMark();
-	};
-
-	let names = ['white', 'black', 'structure'];
-
-	for (let name in names){
-		resetOne(name);
-	}
-
-}
-
-function toggleManual(){
-	globalState.manual = !globalState.manual;
-};
-
-function manualRun(){
-	runAllThree();
-};
-
-function showFeedback(string){
-	const feedback = document.getElementById('feedback');
-	feedback.innerHTML = string;
-}
-
-function removeFeedback(){
-	const feedback = document.getElementById('feedback');
-	feedback.innerHTML = '';
-}
-
-var myEfficientFn = debounce(function() {
-	console.log("fuck");
-}, TIME_OUT);
-
-
 function initializeEditor(){
 	editor.setTheme("ace/theme/dreamweaver");
 	editor.getSession().setMode("ace/mode/javascript");
 	editor.getSession().on('change', function(){
-		myEfficientFn();
+		debounced();
 	})
 
 }
@@ -355,6 +400,3 @@ function initializeEditor(){
 initializeEditor();
 createForm();
 createButtons();
-
-f = runAllThree()
-console.log(f);
