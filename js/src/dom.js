@@ -1,81 +1,50 @@
-const validNodeNames = new Set([
-	'FunctionDeclaration',
-    'BlockStatement',
-    'VariableDeclaration',
-    'WhileStatement',
-    'ReturnStatement',
-    'IfStatement',
-    'ForStatement',
-    'ContinueStatement',
-    'ExpressionStatement',
-    'FunctionExpression',
-    'BreakStatement',
-    'ConditionalExpression',
-    'ObjectExpression',
-    'Literal',
-    'VariableDeclarator',
-    'CallExpression',
-    'VariableDeclarator',
-    'Identifier'
-])
+/* 
 
+global State
 
-// Returns a function, that, as long as it continues to be invoked, will not
-// be triggered. The function will be called after it stops being called for
-// N milliseconds. If `immediate` is passed, trigger the function on the
-// leading edge, instead of the trailing.
-function debounce(func, wait, immediate) {
-	var timeout;
-	return function() {
-		var context = this, args = arguments;
-		var later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-		var callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
-	};
-};
-/*
+Dict<Any, Any>
 
-attrDict
-
-Dom Element -> Dict<String, String> -> Void
-
-Takes a dom unit and dict and does unit.setAttribute for 
-everything key value pair in dict
+This object keeps track of all environment variables.
 
 */
 
-function attrDict(div, dict) {
-	for (let key in dict) {
-		div.setAttribute(key, dict[key]);
-	}
- }
-
-/*
-throttle
-
-Function -> Float -> 
-
-copied from https://jsfiddle.net/jonathansampson/m7G64/
-
-*/
-
- function throttle (callback, limit) {
-    var wait = false;                  // Initially, we're not waiting
-    return function () {               // We return a throttled function
-        if (!wait) {                   // If we're not waiting
-            callback.call();           // Execute users function
-            wait = true;               // Prevent future invocations
-            setTimeout(function () {   // After a period of time
-                wait = false;          // And allow future invocations
-            }, limit);
-        }
-    }
+const globalState = {
+	'manual': false
 }
+
+
+
+function createDiv(){
+	return document.createElement('div');
+}
+
+function createSpan(){
+	return document.createElement('span');
+}
+
+ function createCheckMark(){
+	const span = createSpan();
+
+	span.setAttribute('class', 'checkmark');
+	const stem = createDiv();
+	stem.setAttribute('class', 'checkmark_stem');
+	const kick = document.createElement('div');
+	kick.setAttribute('class', 'checkmark_kick');
+
+	span.appendChild(stem);
+	span.appendChild(kick);
+
+	return span;
+}
+
+function createXMark(){
+	const span = createSpan();
+	span.innerHTML = 'x';
+	span.setAttribute('class', 'X');
+
+	return span;
+}
+
 
 /*
 
@@ -140,7 +109,7 @@ function createWordUnit(type){
 
 	// Initialize outer container div
 
-	const containerDiv = doc.createElement('div');
+	const containerDiv = createDiv();
 
 	attrDict(containerDiv,
 		{
@@ -149,8 +118,12 @@ function createWordUnit(type){
 		});
 
 
+	// Create Checkmark
+
+	const checkMark = createCheckMark();
+
 	// Initialize container for Span and Input
-	const outerContainerSpan = doc.createElement('div');
+	const outerContainerSpan = createDiv();
 	attrDict(outerContainerSpan,
 		{
 			'class': 'outer-container-span',
@@ -159,7 +132,7 @@ function createWordUnit(type){
 
 	// Initialize Inner Container Span
 
-	const containerSpan = doc.createElement('span');
+	const containerSpan = createSpan();
 	attrDict(containerSpan,
 		{
 			'class': 'word-span',
@@ -208,7 +181,7 @@ function createWordUnit(type){
 
 	// Initialize Word List Container
 
-	const wordListContainer = doc.createElement('div');
+	const wordListContainer = createDiv();
 
 	attrDict(wordListContainer,{
 		'class':'word-list',
@@ -222,7 +195,7 @@ function createWordUnit(type){
 	outerContainerSpan.appendChild(inputBar);
 
 
-	let order = [outerContainerSpan, wordListContainer];
+	let order = [checkMark, outerContainerSpan, wordListContainer];
 
 	for (let i = 0; i < order.length; i++){
 		containerDiv.appendChild(order[i]);
@@ -242,7 +215,7 @@ Creates a word div element and returns it
 */
 
 function createWord(word){
-	const span = document.createElement('span')
+	const span = createSpan();
 	span.innerHTML = word;
 	span.setAttribute('class', 'word');
 	return span;
@@ -283,7 +256,7 @@ function createButtons(){
 
 	// Initialize Form that will contain buttons
 
-	const outerForm = doc.createElement('div');
+	const outerForm = createDiv();
 	outerForm.setAttribute('id', 'buttons-container');
 
 	// Initialize three buttons
@@ -314,7 +287,6 @@ function createButtons(){
 	container.appendChild(outerForm);
 }
 
-
 /*
 
 initializeEditor
@@ -326,9 +298,49 @@ with the dreamweaver/javascript theme.
 
 */
 
+
+function reset(){
+
+	function resetOne(name){
+		const wordList = document.getElementById('${name}-word-list');
+		while (wordList.firstChild) {
+		    wordList.removeChild(myNode.firstChild);
+		}	
+
+		const unit = document.getElementById('${name}-unit');
+
+		unit.children[0] = createCheckMark();
+	};
+
+	let names = ['white', 'black', 'structure'];
+
+	for (let name in names){
+		resetOne(name);
+	}
+
+}
+
+function toggleManual(){
+	globalState.manual = !globalState.manual;
+};
+
+function manualRun(){
+	runAllThree();
+};
+
+function showFeedback(string){
+	const feedback = document.getElementById('feedback');
+	feedback.innerHTML = string;
+}
+
+function removeFeedback(){
+	const feedback = document.getElementById('feedback');
+	feedback.innerHTML = '';
+}
+
 var myEfficientFn = debounce(function() {
 	console.log("fuck");
-}, 250);
+}, TIME_OUT);
 
 
 function initializeEditor(){

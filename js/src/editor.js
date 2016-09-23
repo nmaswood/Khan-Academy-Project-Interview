@@ -17,21 +17,6 @@ const ERROR = 0;
 const FAILURE = 1;
 const SUCCESS = 2;
 
-/*
-
-initializeEditor
-
--> 
-
-This function intializes the ace coder environment
-with the dreamweaver/javascript theme.
-
-*/
-
-function initializeEditor(){
-	editor.setTheme("ace/theme/dreamweaver");
-	editor.getSession().setMode("ace/mode/javascript");
-}
 
 /*
 
@@ -147,16 +132,3 @@ function runAllThree(){
 
 	return results;
 }
-
-
-
-const globalState = {
-	'black': true,
-	'white': true,
-	'structure': true
-}
-
-function toggleState(name){
-	globalState[name] = !globalState[name];
-}
-
