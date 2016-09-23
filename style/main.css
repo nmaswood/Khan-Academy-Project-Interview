@@ -200,6 +200,9 @@ cursor:pointer;
 .svg-icon rect {
   fill: #4691f6;
 }
+.svg-icon:active{
+	background: black;
+}
 
 .svg-icon circle {
   stroke: #4691f6;

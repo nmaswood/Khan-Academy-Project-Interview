@@ -276,7 +276,7 @@ function createButtons(){
 
 		const feedbackString = {
 			'reset': 'Click on this button to clear all words and start over.',
-			'run': 'Click button the manually run all tests.',
+			'run': 'Click this button the manually run all tests.',
 			'manual': 'Click this button to turn off automatic tests. This might be a good idea if things are slow.'
 		}[name]
 
