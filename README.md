@@ -18,7 +18,7 @@ This file contains some useful helper functions.
 ##### /src/test
 All files here contain unit tests corresponding to their file in src.
 
-## Design Decesions
+## Design Decisions
 ### Esprima vs. Acorn
 My implementation is library agnostic, however that being said I chose to use esprima in the final product.
 ##### Ease of Use
@@ -28,7 +28,7 @@ Esprima definitely is better documented. The project has a website where you can
 ##### Benchmarks 
 Acorn's benchmark mark tests on their website as well as the general sentiment online points in the direction that acorn is the faster library. However, personally, I found Esprima to be faster. I timed how long my unit tests took (on average on my computer using Chrome). I did not use any of acorn's tree traversal methods which may have sped things up considerably. However, given my implementation I think Esprima is the more straight forward choice.
 ##### Size
-Acorn is about half the size of Esprima however to me 64k is worth the time saved by figuring out why my implemtnation is so much slower in Acorn.
+Acorn is about half the size of Esprima however to me 64k is worth the time saved by figuring out why my implementation is so much slower in Acorn.
 
 | Lib        | No-Big-String (10 Trials) | Big-String (10 Trials)  | Filesize
 | --- |:---:| -----:| :---:|
@@ -38,7 +38,7 @@ Acorn is about half the size of Esprima however to me 64k is worth the time save
 ### Browser Support
 ### General Design Comments
 ### Text Editor Choice
-Khan Academy uses Ace so it seemed like a very rational choice. Overall, the code editor seemed like less a signifacant choice than Esprima / Acorn so I did not try Code Mirror to see how it worked.
+Khan Academy uses Ace so it seemed like a very rational choice. Overall, the code editor seemed like less a significant choice than Esprima / Acorn so I did not try Code Mirror to see how it worked.
 
 ### What happens on large inputs / General UX
 

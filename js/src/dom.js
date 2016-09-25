@@ -481,21 +481,22 @@ var debounced = debounce(function() {
     const end = performance.now()
 
     const difference = end - start;
+    console.log(difference);
 
-    if (difference > 10) {
-        globalState.debounceTimeout = 1000;
-    } else if (difference > 20) {
-        globalState.debounceTimeout = 1500;
+    if (difference > 100) {
+
+        if(!globalState.manual){
+            toggleManual();
+            alert("You have a lot of code which is slowing down validation. The system is turning off auto for better performance.");
+        }
+
     } else if (difference > 50) {
-    	if(!globalState.manual){
-	    	toggleManual();
-	        alert("You have a lot of code which is slowing down validation. The system is turning off auto for better performance.");
-	    }
+        globalState.debounceTimeout = 1500;
+    } else if (difference > 20) {
+        globalState.debounceTimeout = 1000;
     }
 
 }, globalState.debounceTimeout);
-
-
 
 function showInstructions(){
 	const div = document.getElementById('instructions');
@@ -612,4 +613,5 @@ function init() {
     console.log ("Note you might be seeing some error about javascript-worker missing. This is due to minification and is harmless. Please ignore.")
 }
 
+console.log("hello world");
 init();

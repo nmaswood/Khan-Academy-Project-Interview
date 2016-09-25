@@ -13,21 +13,11 @@ var validNodeNames = new Set(['FunctionDeclaration', 'BlockStatement', 'Variable
 
 /*
 
-TIME_OUT
-
-Int
-
-This timeout correponds to how the debouncer waits
-before calling the three api functions again when the user
-is typing.
-
-*/
-
-/*
-
 debounce
 
 function -> int -> void
+
+This is a standard debounce function copied off the internet.
 
 */
 
@@ -53,8 +43,8 @@ attrDict
 
 Dom Element -> Dict<String, String> -> Void
 
-Takes a dom unit and dict and does unit.setAttribute for 
-everything key value pair in dict
+Takes a dom unit and dict and does unit.setAttribute(k,v) for 
+every key value pair in dict
 
 */
 
@@ -87,36 +77,18 @@ Syntatic sugar
 function createSpan() {
     return document.createElement('span');
 }
-/*
-
-createCheckMark
-
-String -> Span
-
-*/
-
-function createCheckMark(name) {
-    var span = createSpan();
-
-    span.setAttribute('class', 'checkmark');
-    span.id = name + '-checkmark';
-    var stem = createDiv();
-    stem.setAttribute('class', 'checkmark_stem');
-    var kick = document.createElement('div');
-    kick.setAttribute('class', 'checkmark_kick');
-
-    span.appendChild(stem);
-    span.appendChild(kick);
-
-    return span;
-}
 
 /*
-
 
 createSvg
 
+String -> SVG
+
+This creates a svg where the image is defined by the
+path it takes.
+
 */
+
 function createSvg(path) {
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     var pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -176,6 +148,7 @@ var Output = function Output(status, message, val) {
 var ERROR = 0;
 var FAILURE = 1;
 var SUCCESS = 2;
+var EMPTY_INPUT = 4;
 
 /*
 
@@ -214,7 +187,9 @@ function runFunction(functionName, func, input) {
 
     var status = input.status;
 
-    if (status === ERROR) return input;
+    if (status === ERROR) {
+        return input;
+    }
 
     var output = func(input.val.body, getInputFromWordList(functionName));
 
@@ -230,16 +205,21 @@ function runFunction(functionName, func, input) {
     var bool = output[0];
     var value = output[1];
 
-    if (bool) return new Output(SUCCESS, 'Hooray! The ' + functionName + ' test passed!', null);
+    if (bool) {
+        return new Output(SUCCESS, 'Hooray! The ' + functionName + ' test passed!', null);
+    }
 
     var asString = function () {
         if (functionName === 'white') {
-            return setToString(value);
+            if (value.size === 1) {
+                return setToString(value) + ' was not found.';
+            } else {
+                return 'The following values were not found: ' + setToString(value) + '.';
+            }
         } else {
-            return value;
+            return value + ' was found';
         }
     }();
-    console.log("asString", asString);
 
     return new Output(FAILURE, asString, null);
 }
@@ -253,6 +233,8 @@ Grabs words from word list div.
 function getInputFromWordList(name) {
 
     var wordList = document.getElementById(name + '-word-list');
+
+    // This converts a node list to an Array
     var children = [].slice.call(wordList.children);
 
     if (!children) return [];
@@ -269,11 +251,14 @@ String -> Output -> List <Output>
 
 Runs an api call for specific function
 */
+
 function run(name, output) {
 
     var words = getInputFromWordList(name);
 
-    if (!words) return '';
+    if (!words) {
+        return new Output(EMPTY_INPUT, 'No words to run test on', null);
+    }
 
     whichFunction = {
         'white': whiteList,
@@ -283,6 +268,7 @@ function run(name, output) {
 
     return runFunction(name, whichFunction, output);
 }
+
 /*
 runAllThree
 
@@ -294,10 +280,9 @@ function runAllThree() {
     var names = ['white', 'black', 'structure'];
     var treeOutput = parseInput();
 
-    var x = names.map(function (x) {
+    return names.map(function (x) {
         return run(x, treeOutput);
     });
-    return x;
 }
 'use strict';
 
@@ -343,7 +328,7 @@ function getChildren(node) {
 
 enqueueChildren 
 
-Queue <Node (Not Null) > -> List <Node> -> Void
+Queue <Node (Not Null)> -> List <Node> -> Void
 
 This takes a Queue<Node> and <List> Node and enqueues all children onto the queue
 
@@ -513,13 +498,30 @@ function generalStructure(tree, structures) {
 
 /* 
 
-global State
+generateGlobalState
 
 Dict<Any, Any>
 
 This object keeps track of all environment variables.
 
+- manual
+are tests run automatically?
+
+- black, white, structure
+the string that is displayed when you hover over the buttons
+
+-wrongInputTimeout
+when the user types in a wrong node name how long do you wait before
+letting them type in another value
+
+-debouceTimeout
+How frequently are tests automatically run?
+
+-wordLineLimit
+How long is a word list?
+
 */
+
 function generateGlobalState() {
     return {
         'manual': false,
@@ -534,6 +536,15 @@ function generateGlobalState() {
 
 var globalState = generateGlobalState();
 
+/* 
+createCheck Macro
+
+String -> SVG
+
+Creates the check button with appropriate events
+
+*/
+
 function createCheckMacro(name) {
     var check = createSvg(svgDict.check);
     check.onmouseover = function () {
@@ -542,6 +553,15 @@ function createCheckMacro(name) {
     check.onmouseout = removeFeedback;
     return check;
 }
+
+/* 
+createXMacro
+
+String -> SVG
+
+Creates an x button with appropriate events
+
+*/
 
 function createXMacro(name) {
 
@@ -596,6 +616,12 @@ function createForm() {
 
     var wordsOuterContainer = doc.getElementById('words-outer-container');
     wordsOuterContainer.appendChild(outerForm);
+}
+
+function changeInputBarColor(inputBar, name) {
+
+    var style = inputBar.getAttribute('style');
+    inputBar.setAttribute('style', name);
 }
 
 /*
@@ -657,41 +683,29 @@ function createWordUnit(type) {
     inputBar.onkeyup = function (e) {
 
         var which = e.which || e.keyCode;
+        var greaterThanLimit = getInputFromWordList(type).length > globalState.wordLineLimit;
 
-        var len = getInputFromWordList(type).length;
+        // If there are more then wordineLimit words
+        // Set the bar permanently red and don't let the
+        // user type anything more
 
-        if (!(len < globalState.wordLineLimit)) {
-            (function () {
-                var style = inputBar.getAttribute('style');
-                var stylePrime = 'color:#e74c3c';
+        var style = greaterThanLimit ? 'color:#e74c3c' : '';
+        changeInputBarColor(inputBar, style);
 
-                inputBar.setAttribute('style', stylePrime);
-            })();
-            return;
-        } else {
-            inputBar.setAttribute('style', '');
-        }
-
-        if (which === 13 && on) {
+        if (which === 13 && on && !greaterThanLimit) {
             if (addWordToList(type, inputBar.value)) {
                 inputBar.value = '';
                 main();
-
-                return;
             } else {
-                (function () {
 
-                    var style = inputBar.getAttribute('style');
-                    var stylePrime = 'color:red';
+                changeInputBarColor(inputBar, 'color:#e74c3c');
 
-                    inputBar.setAttribute('style', stylePrime);
-                    on = false;
-
-                    setTimeout(function () {
-                        on = true;
-                        inputBar.setAttribute('style', style);
-                    }, globalState.wrongInputTimeout);
-                })();
+                // debounce button
+                on = false;
+                setTimeout(function () {
+                    on = true;
+                    changeInputBarColor(inputBar, '');
+                }, globalState.wrongInputTimeout);
             }
         }
     };
@@ -744,6 +758,9 @@ String -> Word ->
 
 Takes a word adds it to whatever of the three lists you want.
 
+CONTRACT:
+this will never be called if word list is greater than limit
+
 */
 
 function addWordToList(name, word) {
@@ -753,11 +770,6 @@ function addWordToList(name, word) {
     }
 
     var list = document.getElementById(name + '-word-list');
-
-    if (list.children.length > 5) {
-        var first = list.children[0];
-        list.removeChild(first);
-    }
     var wordDiv = createWord(word);
     list.appendChild(wordDiv);
     return true;
@@ -859,6 +871,7 @@ function reset() {
     for (var i = 0; i < names.length; i++) {
         resetOne(names[i]);
     }
+    main();
 }
 
 /*
@@ -870,8 +883,7 @@ Sets the feedback div equal to the string
 */
 
 function showFeedback(string) {
-    var feedback = document.getElementById('feedback');
-    feedback.innerHTML = string;
+    document.getElementById('feedback').innerHTML = string;
 }
 
 /*
