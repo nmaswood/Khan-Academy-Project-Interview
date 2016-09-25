@@ -1,4 +1,7 @@
 # Khan-Academy-Project-Interview
+
+## To experience
+Go to [Code Editor](nasrmaswood.com)
 ## To run
 Go to  /final and open up index.html in a browser this is the minified version of the code.
 ## Source
