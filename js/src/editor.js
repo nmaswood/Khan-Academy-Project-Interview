@@ -15,6 +15,7 @@ class Output {
 const ERROR = 0;
 const FAILURE = 1;
 const SUCCESS = 2;
+const EMPTY_INPUT = 4;
 
 /*
 
@@ -53,7 +54,9 @@ function runFunction(functionName, func, input) {
 
     const status = input.status;
 
-    if (status === ERROR) return input;
+    if (status === ERROR){
+    	return input;
+    }
 
     const output = func(input.val.body, getInputFromWordList(functionName));
 
@@ -69,20 +72,26 @@ function runFunction(functionName, func, input) {
     const bool = output[0];
     const value = output[1];
 
-    if (bool) return new Output(SUCCESS, `Hooray! The ${functionName} test passed!`, null);
+    if (bool) {
+    	return new Output(SUCCESS, `Hooray! The ${functionName} test passed!`, null);
+    }
 
     let asString = (function() {
         if (functionName === 'white') {
-            return setToString(value)
+        	if (value.size === 1){
+        		return `${setToString(value)} was not found.`
+
+        	} else {
+	            return `The following values were not found: ${setToString(value)}.`
+        	}
+
         } else {
-            return value;
+            return `${value} was found`;
         }
     })();
-    console.log("asString", asString);
 
     return new Output(FAILURE, asString, null);
 }
-
 
 /*
 getInputFromWordList
@@ -93,13 +102,15 @@ Grabs words from word list div.
 function getInputFromWordList(name) {
 
     const wordList = document.getElementById(`${name}-word-list`);
+
+    // This converts a node list to an Array
     const children = [].slice.call(wordList.children);
 
     if (!children) return [];
 
     return children.map(function(x) {
         return x.innerHTML;
-    })
+    });
 
 }
 
@@ -110,11 +121,14 @@ String -> Output -> List <Output>
 
 Runs an api call for specific function
 */
+
 function run(name, output) {
 
     const words = getInputFromWordList(name);
 
-    if (!words) return '';
+    if (!words) {
+    	return new Output(EMPTY_INPUT, 'No words to run test on', null);
+    }
 
     whichFunction = {
         'white': whiteList,
@@ -124,6 +138,7 @@ function run(name, output) {
 
     return runFunction(name, whichFunction, output)
 }
+
 /*
 runAllThree
 
@@ -135,9 +150,7 @@ function runAllThree() {
     let names = ['white', 'black', 'structure'];
     let treeOutput = parseInput();
 
-    const x = names.map(function(x) {
+    return names.map(function(x) {
         return run(x, treeOutput)
     });
-    return x;
-
 }

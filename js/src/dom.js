@@ -1,12 +1,29 @@
 /* 
 
-global State
+generateGlobalState
 
 Dict<Any, Any>
 
 This object keeps track of all environment variables.
 
+- manual
+are tests run automatically?
+
+- black, white, structure
+the string that is displayed when you hover over the buttons
+
+-wrongInputTimeout
+when the user types in a wrong node name how long do you wait before
+letting them type in another value
+
+-debouceTimeout
+How frequently are tests automatically run?
+
+-wordLineLimit
+How long is a word list?
+
 */
+
 function generateGlobalState() {
     return {
         'manual': false,
@@ -21,6 +38,15 @@ function generateGlobalState() {
 
 let globalState = generateGlobalState();
 
+/* 
+createCheck Macro
+
+String -> SVG
+
+Creates the check button with appropriate events
+
+*/
+
 function createCheckMacro(name) {
     const check = createSvg(svgDict.check);
     check.onmouseover = function() {
@@ -29,6 +55,15 @@ function createCheckMacro(name) {
     check.onmouseout = removeFeedback;
     return check;
 }
+
+/* 
+createXMacro
+
+String -> SVG
+
+Creates an x button with appropriate events
+
+*/
 
 function createXMacro(name) {
 
@@ -85,6 +120,13 @@ function createForm() {
     wordsOuterContainer.appendChild(outerForm);
 }
 
+
+function changeInputBarColor(inputBar, name){
+
+    const style = inputBar.getAttribute('style');
+    inputBar.setAttribute('style', name);
+}
+
 /*
 
 createWord Unit
@@ -119,7 +161,7 @@ function createWordUnit(type) {
     attrDict(outerContainerSpan, {
         'class': 'outer-container-span',
         'id': `${type}-outer-container-span`
-    })
+    });
 
     // Initialize Inner Container Span
 
@@ -144,42 +186,30 @@ function createWordUnit(type) {
     inputBar.onkeyup = function(e) {
 
         const which = e.which || e.keyCode;
+        const greaterThanLimit = getInputFromWordList(type).length > globalState.wordLineLimit;
 
+        // If there are more then wordineLimit words
+        // Set the bar permanently red and don't let the
+        // user type anything more
 
-        const len = getInputFromWordList(type).length;
+        const style = greaterThanLimit? 'color:#e74c3c': '';
+        changeInputBarColor(inputBar,style);
 
-        if (!(len < globalState.wordLineLimit)) {
-            (function() {
-                const style = inputBar.getAttribute('style');
-                const stylePrime = 'color:#e74c3c';
-
-                inputBar.setAttribute('style', stylePrime);
-            })()
-            return;
-        } else {
-            inputBar.setAttribute('style', '')
-        }
-
-        if (which === 13 && on) {
+        if (which === 13 && on && !greaterThanLimit) {
             if (addWordToList(type, inputBar.value)) {
                 inputBar.value = '';
                 main();
-
-                return;
             } else {
 
-                const style = inputBar.getAttribute('style');
-                const stylePrime = 'color:red';
-
-                inputBar.setAttribute('style', stylePrime);
+                changeInputBarColor(inputBar, 'color:#e74c3c');
+                
+                // debounce button
                 on = false;
-
                 setTimeout(
                     function() {
                         on = true;
-                        inputBar.setAttribute('style', style);
+                        changeInputBarColor(inputBar, '');
                     }, globalState.wrongInputTimeout);
-
             }
         }
     }
@@ -233,6 +263,9 @@ String -> Word ->
 
 Takes a word adds it to whatever of the three lists you want.
 
+CONTRACT:
+this will never be called if word list is greater than limit
+
 */
 
 function addWordToList(name, word) {
@@ -242,11 +275,6 @@ function addWordToList(name, word) {
     }
 
     const list = document.getElementById(`${name}-word-list`);
-
-    if (list.children.length > 5) {
-        const first = list.children[0];
-        list.removeChild(first);
-    }
     const wordDiv = createWord(word);
     list.appendChild(wordDiv);
     return true;
@@ -348,6 +376,7 @@ function reset() {
     for (let i = 0; i < names.length; i++) {
         resetOne(names[i]);
     }
+    main();
 }
 
 /*
@@ -359,8 +388,7 @@ Sets the feedback div equal to the string
 */
 
 function showFeedback(string) {
-    const feedback = document.getElementById('feedback');
-    feedback.innerHTML = string;
+    document.getElementById('feedback').innerHTML  = string;
 }
 
 /*
@@ -556,8 +584,6 @@ function createQuestions(){
 }
 
 createQuestions();
-
-
 
 /*
 

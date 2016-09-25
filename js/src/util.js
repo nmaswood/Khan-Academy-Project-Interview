@@ -30,21 +30,11 @@ const validNodeNames = new Set([
 
 /*
 
-TIME_OUT
-
-Int
-
-This timeout correponds to how the debouncer waits
-before calling the three api functions again when the user
-is typing.
-
-*/
-
-/*
-
 debounce
 
 function -> int -> void
+
+This is a standard debounce function copied off the internet.
 
 */
 
@@ -69,8 +59,8 @@ attrDict
 
 Dom Element -> Dict<String, String> -> Void
 
-Takes a dom unit and dict and does unit.setAttribute for 
-everything key value pair in dict
+Takes a dom unit and dict and does unit.setAttribute(k,v) for 
+every key value pair in dict
 
 */
 
@@ -103,36 +93,18 @@ Syntatic sugar
 function createSpan(){
     return document.createElement('span');
 }
-/*
-
-createCheckMark
-
-String -> Span
-
-*/
-
-function createCheckMark(name){
-    const span = createSpan();
-
-    span.setAttribute('class', 'checkmark');
-    span.id = `${name}-checkmark`;
-    const stem = createDiv();
-    stem.setAttribute('class', 'checkmark_stem');
-    const kick = document.createElement('div');
-    kick.setAttribute('class', 'checkmark_kick');
-
-    span.appendChild(stem);
-    span.appendChild(kick);
-
-    return span;
-}
 
 /*
-
 
 createSvg
 
+String -> SVG
+
+This creates a svg where the image is defined by the
+path it takes.
+
 */
+
 function createSvg(path){
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');

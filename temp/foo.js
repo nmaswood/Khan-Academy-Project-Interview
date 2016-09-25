@@ -153,7 +153,8 @@ var svgDict = {
     'check': 'M9.917,0.875c-5.086,0-9.208,4.123-9.208,9.208c0,5.086,4.123,9.208,9.208,9.208s9.208-4.122,9.208-9.208\nC19.125,4.998,15.003,0.875,9.917,0.875z M9.917,18.141c-4.451,0-8.058-3.607-8.058-8.058s3.607-8.057,8.058-8.057\nc4.449,0,8.057,3.607,8.057,8.057S14.366,18.141,9.917,18.141z M13.851,6.794l-5.373,5.372L5.984,9.672\nc-0.219-0.219-0.575-0.219-0.795,0c-0.219,0.22-0.219,0.575,0,0.794l2.823,2.823c0.02,0.028,0.031,0.059,0.055,0.083\nc0.113,0.113,0.263,0.166,0.411,0.162c0.148,0.004,0.298-0.049,0.411-0.162c0.024-0.024,0.036-0.055,0.055-0.083l5.701-5.7\nc0.219-0.219,0.219-0.575,0-0.794C14.425,6.575,14.069,6.575,13.851,6.794z',
     'x': 'M13.864,6.136c-0.22-0.219-0.576-0.219-0.795,0L10,9.206l-3.07-3.07c-0.219-0.219-0.575-0.219-0.795,0\nc-0.219,0.22-0.219,0.576,0,0.795L9.205,10l-3.07,3.07c-0.219,0.219-0.219,0.574,0,0.794c0.22,0.22,0.576,0.22,0.795,0L10,10.795\nl3.069,3.069c0.219,0.22,0.575,0.22,0.795,0c0.219-0.22,0.219-0.575,0-0.794L10.794,10l3.07-3.07\nC14.083,6.711,14.083,6.355,13.864,6.136z M10,0.792c-5.086,0-9.208,4.123-9.208,9.208c0,5.085,4.123,9.208,9.208,9.208\ns9.208-4.122,9.208-9.208C19.208,4.915,15.086,0.792,10,0.792z M10,18.058c-4.451,0-8.057-3.607-8.057-8.057\nc0-4.451,3.606-8.057,8.057-8.057c4.449,0,8.058,3.606,8.058,8.057C18.058,14.45,14.449,18.058,10,18.058z',
     'manual': 'M4.68,13.716v-0.169H4.554C4.592,13.605,4.639,13.658,4.68,13.716z M11.931,6.465\nc-0.307-0.087-0.623,0.106-0.706,0.432l-1.389,5.484c-0.901,0.084-1.609,0.833-1.609,1.757c0,0.979,0.793,1.773,1.773,1.773\nc0.979,0,1.773-0.794,1.773-1.773c0-0.624-0.324-1.171-0.812-1.486l1.377-5.439C12.422,6.887,12.239,6.552,11.931,6.465z\nM10.591,14.729H9.408v-1.182h1.183V14.729z M15.32,13.716c0.04-0.058,0.087-0.11,0.126-0.169H15.32V13.716z M10,3.497\nc-3.592,0-6.503,2.911-6.503,6.503H4.68c0-2.938,2.382-5.32,5.32-5.32s5.32,2.382,5.32,5.32h1.182\nC16.502,6.408,13.591,3.497,10,3.497z M10,0.542c-5.224,0-9.458,4.234-9.458,9.458c0,5.224,4.234,9.458,9.458,9.458\nc5.224,0,9.458-4.234,9.458-9.458C19.458,4.776,15.224,0.542,10,0.542z M15.32,16.335v0.167h-0.212\nc-1.407,1.107-3.179,1.773-5.108,1.773c-1.93,0-3.701-0.666-5.108-1.773H4.68v-0.167C2.874,14.816,1.724,12.543,1.724,10\nc0-4.571,3.706-8.276,8.276-8.276c4.57,0,8.275,3.706,8.275,8.276C18.275,12.543,17.126,14.816,15.32,16.335z',
-    'run': 'M16.76,7.51l-5.199-5.196c-0.234-0.239-0.633-0.066-0.633,0.261v2.534c-0.267-0.035-0.575-0.063-0.881-0.063c-3.813,0-6.915,3.042-6.915,6.783c0,2.516,1.394,4.729,3.729,5.924c0.367,0.189,0.71-0.266,0.451-0.572c-0.678-0.793-1.008-1.645-1.008-2.602c0-2.348,1.93-4.258,4.303-4.258c0.108,0,0.215,0.003,0.321,0.011v2.634c0,0.326,0.398,0.5,0.633,0.262l5.199-5.193C16.906,7.891,16.906,7.652,16.76,7.51 M11.672,12.068V9.995c0-0.185-0.137-0.341-0.318-0.367c-0.219-0.032-0.49-0.05-0.747-0.05c-2.78,0-5.046,2.241-5.046,5c0,0.557,0.099,1.092,0.292,1.602c-1.261-1.111-1.979-2.656-1.979-4.352c0-3.331,2.77-6.041,6.172-6.041c0.438,0,0.886,0.067,1.184,0.123c0.231,0.043,0.441-0.134,0.441-0.366V3.472l4.301,4.3L11.672,12.068z'
+    'run': 'M16.76,7.51l-5.199-5.196c-0.234-0.239-0.633-0.066-0.633,0.261v2.534c-0.267-0.035-0.575-0.063-0.881-0.063c-3.813,0-6.915,3.042-6.915,6.783c0,2.516,1.394,4.729,3.729,5.924c0.367,0.189,0.71-0.266,0.451-0.572c-0.678-0.793-1.008-1.645-1.008-2.602c0-2.348,1.93-4.258,4.303-4.258c0.108,0,0.215,0.003,0.321,0.011v2.634c0,0.326,0.398,0.5,0.633,0.262l5.199-5.193C16.906,7.891,16.906,7.652,16.76,7.51 M11.672,12.068V9.995c0-0.185-0.137-0.341-0.318-0.367c-0.219-0.032-0.49-0.05-0.747-0.05c-2.78,0-5.046,2.241-5.046,5c0,0.557,0.099,1.092,0.292,1.602c-1.261-1.111-1.979-2.656-1.979-4.352c0-3.331,2.77-6.041,6.172-6.041c0.438,0,0.886,0.067,1.184,0.123c0.231,0.043,0.441-0.134,0.441-0.366V3.472l4.301,4.3L11.672,12.068z',
+    'help': "M17.684,7.925l-5.131-0.67L10.329,2.57c-0.131-0.275-0.527-0.275-0.658,0L7.447,7.255l-5.131,0.67C2.014,7.964,1.892,8.333,2.113,8.54l3.76,3.568L4.924,17.21c-0.056,0.297,0.261,0.525,0.533,0.379L10,15.109l4.543,2.479c0.273,0.153,0.587-0.089,0.533-0.379l-0.949-5.103l3.76-3.568C18.108,8.333,17.986,7.964,17.684,7.925 M13.481,11.723c-0.089,0.083-0.129,0.205-0.105,0.324l0.848,4.547l-4.047-2.208c-0.055-0.03-0.116-0.045-0.176-0.045s-0.122,0.015-0.176,0.045l-4.047,2.208l0.847-4.547c0.023-0.119-0.016-0.241-0.105-0.324L3.162,8.54L7.74,7.941c0.124-0.016,0.229-0.093,0.282-0.203L10,3.568l1.978,4.17c0.053,0.11,0.158,0.187,0.282,0.203l4.578,0.598L13.481,11.723z"
 };
 'use strict';
 
@@ -976,6 +977,62 @@ var debounced = debounce(function () {
     }
 }, globalState.debounceTimeout);
 
+function showInstructions() {
+    var div = document.getElementById('instructions');
+    div.setAttribute('style', '');
+}
+
+function hideInstructions() {
+    var div = document.getElementById('instructions');
+    div.setAttribute('style', 'display:none');
+}
+
+function help() {
+
+    var container = document.getElementById('help');
+    var svg = createSvg(svgDict.help);
+    svg.onmouseover = showInstructions;
+    svg.onmouseout = hideInstructions;
+
+    container.appendChild(svg);
+}
+
+function createQuestion(q, a) {
+
+    var outerContainer = createDiv();
+    outerContainer.setAttribute('class', 'question-container');
+
+    var question = createDiv();
+    question.setAttribute('class', 'question');
+    question.innerHTML = q;
+
+    var answer = createDiv();
+    answer.setAttribute('class', 'answer');
+    answer.innerHTML = a;
+
+    outerContainer.appendChild(question);
+    outerContainer.appendChild(answer);
+
+    return outerContainer;
+}
+
+var questions = [['What does this do?', 'This code editor can help determine if your code conforms to certain expectations.'], ['What are these expectations?', 'A program is a series of instructions. These instructions can be structured in many different ways. We want to you structure your code based on certain constraints.'], ['What does \'white list\' do?', 'For white list you must have all the structures listed some where in your code. E.g. IfStatement -> if(true){} PASSES'], ['What does \'black list\' do?', 'For \'black list\' you may not have any of the structures listed any where in your code. IfStatement -> while(true){} PASSES'], ['What does \'structure\' do?', 'For the structure you must have the structures listed in nested order. E.g. IfStatement WhileStatement -> if(true){while(true){}} PASSES'], ['How do I run tests?', 'Type a valid Javascript node name into any of the input bars and hit enter. When you are typing the tests will automatically be run'], ['What are Javascript node names?', 'These node names come from a defined standard. For starters try ForStatement, IfStatement, WhileStatement or VariableDeclaration. (Case sensitive)'], ['The code editor is running super slow what do I do?', 'The editor will try and adjust to account for slow speeds, but you still think it is slow. Put it into manual mode and run the tests by hand.']];
+
+function createQuestions() {
+
+    var qs = questions.map(function (x) {
+        return createQuestion(x[0], x[1]);
+    });
+
+    var div = document.getElementById('faq');
+
+    for (var i = 0; i < qs.length; i++) {
+        div.appendChild(qs[i]);
+    }
+}
+
+createQuestions();
+
 /*
 
 initializeEditor
@@ -999,6 +1056,7 @@ function init() {
     initializeEditor();
     createForm();
     createButtons();
+    help();
     console.log("Note you might be seeing some error about javascript-worker missing. This is due to minification and is harmless. Please ignore.");
 }
 

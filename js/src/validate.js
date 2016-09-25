@@ -51,7 +51,7 @@ function getChildren(node){
 
 enqueueChildren 
 
-Queue <Node (Not Null) > -> List <Node> -> Void
+Queue <Node (Not Null)> -> List <Node> -> Void
 
 This takes a Queue<Node> and <List> Node and enqueues all children onto the queue
 
