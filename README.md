@@ -4,6 +4,9 @@
 Go to [Code Editor](http://nasrmaswood.com)
 ## To run
 Go to  /final and open up index.html in a browser this is the minified version of the code.
+
+P.S. If you have an issue accessing the website make sure you type in http://nasrmaswood.com and NOT http://www.nasrmaswood.com it is some GoDaddy hosting issue I have yet to work out.
+
 ## Source
 ### Libraries used
 No external libraries were used. I did not think I needed anymore than vanilla css, js, html. Gulp was used to convert es6 to es5 and minify the code.
