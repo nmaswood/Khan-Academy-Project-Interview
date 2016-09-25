@@ -304,7 +304,6 @@ function createButtons() {
 
     function makeButton(name) {
 
-        console.log(name);
         const svg = createSvg(svgDict[name])
         svg.setAttribute('id', `${name}-button`)
 
@@ -481,7 +480,6 @@ var debounced = debounce(function() {
     const end = performance.now()
 
     const difference = end - start;
-    console.log(difference);
 
     if (difference > 100) {
 
@@ -613,5 +611,4 @@ function init() {
     console.log ("Note you might be seeing some error about javascript-worker missing. This is due to minification and is harmless. Please ignore.")
 }
 
-console.log("hello world");
 init();

@@ -799,7 +799,6 @@ function createButtons() {
 
     function makeButton(name) {
 
-        console.log(name);
         var svg = createSvg(svgDict[name]);
         svg.setAttribute('id', name + '-button');
 
@@ -977,15 +976,16 @@ var debounced = debounce(function () {
 
     var difference = end - start;
 
-    if (difference > 10) {
-        globalState.debounceTimeout = 1000;
-    } else if (difference > 20) {
-        globalState.debounceTimeout = 1500;
-    } else if (difference > 50) {
+    if (difference > 100) {
+
         if (!globalState.manual) {
             toggleManual();
             alert("You have a lot of code which is slowing down validation. The system is turning off auto for better performance.");
         }
+    } else if (difference > 50) {
+        globalState.debounceTimeout = 1500;
+    } else if (difference > 20) {
+        globalState.debounceTimeout = 1000;
     }
 }, globalState.debounceTimeout);
 
